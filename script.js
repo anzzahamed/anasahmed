@@ -231,11 +231,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     drawX = canvasWidth - drawWidth - (canvasWidth * 0.03);
                     drawY = 0;
                 } else {
-                    // Mobile view: width is 100% of viewport, height scales proportionally, centered.
+                    // Mobile view: width is 100% of viewport, height scales proportionally.
+                    // Aligned to the top of the screen.
                     drawWidth = canvasWidth;
                     drawHeight = canvasWidth / imgRatio;
                     drawX = 0;
-                    drawY = (canvasHeight - drawHeight) / 2;
+                    drawY = 0;
                 }
                 
                 heroCtx.drawImage(img, drawX, drawY, drawWidth, drawHeight);

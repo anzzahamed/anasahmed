@@ -1456,7 +1456,6 @@ footer {
         -webkit-mask-image: none;
     }
 
-    
     .hero-grid {
         grid-template-columns: 1fr;
         text-align: center;
@@ -1469,15 +1468,28 @@ footer {
         max-width: 100%;
     }
     
+    .hero-content h1 {
+        font-size: 2.5rem; /* Shrunk from 4rem */
+    }
+
     .hero-lead {
+        font-size: 1.05rem; /* Shrunk from 1.25rem */
+        max-width: 100%;
         margin-left: auto;
         margin-right: auto;
+        margin-bottom: 24px;
     }
     
     .hero-quick-stats {
         justify-content: center;
+        gap: 24px;
+        padding-top: 24px;
     }
-    
+
+    .stat-num {
+        font-size: 1.6rem; /* Shrunk from 2rem */
+    }
+
     .about-grid {
         grid-template-columns: 1fr;
     }
@@ -1497,15 +1509,14 @@ footer {
 }
 
 @media (max-width: 768px) {
+    body {
+        font-size: 0.9rem; /* Slightly smaller base text */
+    }
+
     header {
         padding: 8px 0;
     }
 
-    .portfolio-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
     .menu-toggle {
         display: flex;
     }
@@ -1553,9 +1564,106 @@ footer {
     .menu-toggle.active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
     }
-    
-    .hero-content h1 {
-        font-size: 2.75rem;
+
+    .section-title h2 {
+        font-size: 1.75rem; /* Shrunk from 2.5rem */
+    }
+
+    .section-title {
+        margin-bottom: 40px;
+    }
+
+    /* Smaller, tighter layouts for cards */
+    .card-glass {
+        padding: 20px !important;
+    }
+
+    /* About Section reductions */
+    .about-info h3 {
+        font-size: 1.35rem; /* Shrunk from 1.8rem */
+        margin-bottom: 12px;
+    }
+
+    .about-info p {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+    }
+
+    .strengths-list {
+        margin-top: 16px;
+    }
+
+    .strengths-list ul {
+        gap: 8px;
+    }
+
+    .strengths-list li {
+        font-size: 0.88rem;
+    }
+
+    /* Education card reductions */
+    .edu-card .meta-item {
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+    }
+
+    .edu-card h5 {
+        font-size: 0.95rem;
+    }
+
+    /* Experience section (Shorter Version) */
+    .timeline-details {
+        display: none !important; /* Shorter version: hide detailed bullet lists */
+    }
+
+    .timeline-summary {
+        margin-bottom: 0px;
+    }
+
+    .timeline-content h3 {
+        font-size: 1.15rem;
+    }
+
+    .company-name {
+        margin-bottom: 8px;
+        font-size: 0.88rem;
+    }
+
+    /* Skills: Icons only (No name/tag text) */
+    .skills-compact-grid {
+        grid-template-columns: repeat(5, 1fr); /* 5 icons per row */
+        justify-items: center;
+        gap: 12px;
+    }
+
+    .skill-compact-card {
+        padding: 8px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .skill-compact-card:hover {
+        transform: translateY(-2px);
+        box-shadow: none;
+    }
+
+    .skill-icon {
+        width: 44px; /* Increased touch targets */
+        height: 44px;
+        border-radius: 10px;
+    }
+
+    .skill-details {
+        display: none !important; /* Hide name/text details */
+    }
+
+    /* Portfolio Stacked */
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
     
     .promo-card {
@@ -1576,9 +1684,25 @@ footer {
     }
 }
 
+@media (max-width: 576px) {
+    .skills-tab-nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .tab-btn {
+        justify-content: center;
+    }
+
+    .skills-compact-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 icons per row for small mobile */
+    }
+}
+
 @media (max-width: 480px) {
     .hero-content h1 {
-        font-size: 2.2rem;
+        font-size: 1.8rem; /* Shrunk from 2.2rem */
     }
     
     .hero-actions {
@@ -1590,30 +1714,11 @@ footer {
         width: 100%;
     }
     
-    .section-title h2 {
-        font-size: 2rem;
-    }
-    
     .timeline {
         padding-left: 20px;
     }
     
     .timeline-content {
         padding: 20px;
-    }
-    
-    .portfolio-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 576px) {
-    .skills-tab-nav {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
-    .tab-btn {
-        justify-content: center;
     }
 }
