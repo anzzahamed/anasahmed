@@ -399,6 +399,7 @@ header.scrolled {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for modern Safari/Chrome mobile */
     z-index: -1;
     pointer-events: none;
     opacity: 0.95; /* High premium visibility */
@@ -523,7 +524,7 @@ header.scrolled {
    ABOUT & DETAILS SECTION
    ========================================== */
 .about-section {
-    padding: 60px 0; /* Reduced to tighten space */
+    padding: 40px 0;
 }
 
 .about-grid {
@@ -673,7 +674,7 @@ header.scrolled {
    EXPERIENCE SECTION (TIMELINE)
    ========================================== */
 .experience-section {
-    padding: 60px 0; /* Reduced to tighten space */
+    padding: 40px 0;
     position: relative;
 }
 
@@ -790,7 +791,7 @@ header.scrolled {
    SKILLS SECTION
    ========================================== */
 .skills-section {
-    padding: 60px 0; /* Reduced to tighten space */
+    padding: 40px 0;
 }
 
 /* Skills Tabs Styling */
@@ -906,7 +907,7 @@ header.scrolled {
    PORTFOLIO SECTION
    ========================================== */
 .portfolio-section {
-    padding: 60px 0; /* Reduced to tighten space */
+    padding: 40px 0;
 }
 
 /* External Promotion Cards */
@@ -1114,7 +1115,7 @@ header.scrolled {
    CONTACT SECTION
    ========================================== */
 .contact-section {
-    padding: 60px 0; /* Reduced to tighten space */
+    padding: 40px 0;
 }
 
 .contact-grid {
@@ -1329,7 +1330,7 @@ header.scrolled {
    THANK YOU SECTION
    ========================================= */
 .thank-you-section {
-    padding: 60px 0; /* Reduced to tighten space */
+    padding: 40px 0 0; /* Tightened thank you section */
     background: var(--bg-primary);
     display: flex;
     align-items: center;
@@ -1784,5 +1785,34 @@ footer {
     
     .timeline-content {
         padding: 20px;
+    }
+}
+
+/* Custom spacing reductions for Apple mobile and tablet viewports */
+@media (max-width: 992px) {
+    .about-section,
+    .experience-section,
+    .skills-section,
+    .portfolio-section,
+    .contact-section,
+    .thank-you-section {
+        padding: 40px 0 !important;
+    }
+    .hero-section {
+        padding: 130px 0 40px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-section,
+    .experience-section,
+    .skills-section,
+    .portfolio-section,
+    .contact-section,
+    .thank-you-section {
+        padding: 30px 0 !important;
+    }
+    .hero-section {
+        padding: 110px 0 30px !important;
     }
 }

@@ -182,12 +182,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const totalFrames = 239;
         const images = [];
+        for (let i = 0; i < totalFrames; i++) {
+            images.push(new Image());
+        }
         let loadedCount = 0;
         let imagesLoaded = false;
 
         let lastDrawnFrame = -1;
         let canvasWidth = 0;
         let canvasHeight = 0;
+        let lastWidth = window.innerWidth;
+        let lastHeight = window.innerHeight;
 
         // Generate file paths (optimized resolution saved locally)
         const framePaths = [];
@@ -197,8 +202,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function resizeCanvas() {
-            canvasWidth = window.innerWidth;
-            canvasHeight = window.innerHeight;
+            const newWidth = window.innerWidth;
+            const newHeight = window.innerHeight;
+            
+            // On iOS Safari, vertical scrolling triggers resize events due to address bar collapse/expansion.
+            // Only trigger a redraw if the width changes, or if height changes significantly (e.g. screen rotation).
+            const heightDiff = Math.abs(newHeight - lastHeight);
+            if (newWidth === lastWidth && heightDiff < 120) {
+                return; // Skip address-bar-triggered layout changes
+            }
+            
+            lastWidth = newWidth;
+            lastHeight = newHeight;
+            
+            canvasWidth = newWidth;
+            canvasHeight = newHeight;
             heroCanvas.width = canvasWidth;
             heroCanvas.height = canvasHeight;
             
@@ -245,28 +263,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function preload() {
-            for (let i = 0; i < totalFrames; i++) {
-                const img = new Image();
-                img.src = framePaths[i];
-                img.onload = () => {
-                    loadedCount++;
-                    if (loadedCount === totalFrames) {
-                        onPreloadComplete();
-                    }
-                };
-                img.onerror = () => {
-                    loadedCount++;
-                    if (loadedCount === totalFrames) {
-                        onPreloadComplete();
-                    }
-                };
-                images.push(img);
-            }
-        }
-
-        function onPreloadComplete() {
-            imagesLoaded = true;
-            resizeCanvas(); // Draw initial frame on complete
+            const startFrame = 20; // Bypassed first 20 zoom frames
+            const firstImg = images[startFrame];
+            firstImg.src = framePaths[startFrame];
+            
+            firstImg.onload = () => {
+                imagesLoaded = true;
+                resizeCanvas(); // Draw initial frame immediately!
+                
+                // Now load all the remaining frames in the background
+                for (let i = 0; i < totalFrames; i++) {
+                    if (i === startFrame) continue;
+                    const img = images[i];
+                    img.src = framePaths[i];
+                    img.onload = () => {
+                        loadedCount++;
+                    };
+                    img.onerror = () => {
+                        loadedCount++;
+                    };
+                }
+            };
+            
+            firstImg.onerror = () => {
+                imagesLoaded = true;
+                for (let i = 0; i < totalFrames; i++) {
+                    if (i === startFrame) continue;
+                    const img = images[i];
+                    img.src = framePaths[i];
+                }
+            };
         }
 
         function updateTargetFrame() {
