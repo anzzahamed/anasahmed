@@ -1033,10 +1033,12 @@ header.scrolled {
     border: none;
     z-index: 1;
     pointer-events: none;
+    transform: scale(1.04); /* Crop out third-party player black borders */
     transition: var(--transition-smooth);
 }
 
 .portfolio-item:hover .portfolio-iframe {
+    transform: scale(1.08); /* Hover zoom */
     filter: brightness(1.1);
 }
 
@@ -1658,9 +1660,12 @@ footer {
         font-size: 0.95rem;
     }
 
-    /* Languages card mobile grid spacing helper */
+    /* Languages card mobile flex spacing helper */
     .lang-grid .collapsible-mobile {
-        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
     }
 
     /* Experience section (Shorter Version overrides) */
