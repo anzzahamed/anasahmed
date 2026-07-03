@@ -1,0 +1,14 @@
+# Logs and temp files
+*.log
+test.txt
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules (if ever added)
+node_modules/
+
+# IDE files
+.vscode/
+.gemini/
