@@ -520,6 +520,36 @@ header.scrolled {
     100% { top: 6px; opacity: 1; }
 }
 
+/* Mobile-inline scroll hint — shown only on small screens inside the stats row */
+.scroll-hint-mobile {
+    display: none; /* hidden on desktop */
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;   /* pushes to right edge of the stats row */
+    opacity: 0.6;
+    text-decoration: none;
+}
+
+.scroll-hint-mouse {
+    width: 18px;
+    height: 30px;
+    border: 2px solid var(--text-muted);
+    border-radius: 9px;
+    position: relative;
+}
+
+.scroll-hint-wheel {
+    width: 3px;
+    height: 6px;
+    background-color: var(--accent-blue);
+    border-radius: 2px;
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scrollMouse 1.8s infinite ease-in-out;
+}
+
 /* ==========================================
    ABOUT & DETAILS SECTION
    ========================================== */
@@ -1490,6 +1520,17 @@ footer {
         gap: 24px;
         padding-top: 24px;
         text-align: left;
+        align-items: center; /* vertically center the inline mouse widget */
+    }
+
+    /* Hide the absolute-positioned scroll indicator — it overlaps stats on mobile */
+    .scroll-indicator {
+        display: none;
+    }
+
+    /* Show the compact inline version inside the stats row instead */
+    .scroll-hint-mobile {
+        display: flex;
     }
 
     .stat-num {
