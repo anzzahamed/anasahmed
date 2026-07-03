@@ -376,4 +376,52 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // ==========================================
+    // 11. VIDEO MODAL — open on card click
+    // ==========================================
+    const vModal      = document.getElementById('video-modal');
+    const vIframe     = document.getElementById('vmodal-iframe');
+    const vCloseBtn   = document.getElementById('vmodal-close');
+
+    function openVideoModal(videoId) {
+        if (!vModal || !vIframe) return;
+        // Full Vimeo player — no background/muted/loop so audio and controls work
+        vIframe.src = `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
+        vModal.classList.add('active');
+        vModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('vmodal-open');
+    }
+
+    function closeVideoModal() {
+        if (!vModal || !vIframe) return;
+        vModal.classList.remove('active');
+        vModal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('vmodal-open');
+        // Clear src to actually stop the video & free memory
+        setTimeout(() => { vIframe.src = ''; }, 300);
+    }
+
+    // Attach click to every portfolio card that has a video id
+    document.querySelectorAll('.portfolio-item[data-video-id]').forEach(card => {
+        card.addEventListener('click', () => {
+            openVideoModal(card.dataset.videoId);
+        });
+        card.style.cursor = 'pointer';
+    });
+
+    // Close button
+    if (vCloseBtn) vCloseBtn.addEventListener('click', closeVideoModal);
+
+    // Click on dark backdrop to close
+    if (vModal) {
+        vModal.addEventListener('click', (e) => {
+            if (e.target === vModal) closeVideoModal();
+        });
+    }
+
+    // Keyboard ESC to close
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeVideoModal();
+    });
 });

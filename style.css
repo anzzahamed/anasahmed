@@ -1857,3 +1857,129 @@ footer {
         padding: 110px 0 30px !important;
     }
 }
+
+/* =====================================================
+   MOBILE HERO TEXT — smaller on phones only
+   ===================================================== */
+@media (max-width: 992px) {
+    .hero-content h1 {
+        font-size: 2rem !important;
+        line-height: 1.15;
+    }
+    .hero-lead {
+        font-size: 0.92rem !important;
+        line-height: 1.6;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 1.65rem !important;
+    }
+    .hero-lead {
+        font-size: 0.88rem !important;
+    }
+}
+
+/* =====================================================
+   VIDEO MODAL POPUP
+   ===================================================== */
+.vmodal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.vmodal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.vmodal-box {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    background: rgba(10, 10, 20, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.05);
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vmodal-overlay.active .vmodal-box {
+    transform: scale(1) translateY(0);
+}
+
+/* Close × button */
+.vmodal-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    z-index: 10;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.vmodal-close:hover {
+    background: rgba(239, 68, 68, 0.8);
+    border-color: transparent;
+    transform: scale(1.1);
+}
+
+/* 16:9 responsive player */
+.vmodal-player-wrap {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 */
+    background: #000;
+}
+
+.vmodal-iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Drive CTA strip */
+.vmodal-footer {
+    display: flex;
+    justify-content: center;
+    padding: 18px 24px;
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.vmodal-drive-btn {
+    font-size: 0.9rem;
+    padding: 10px 24px;
+}
+
+/* Prevent background scroll when modal open */
+body.vmodal-open {
+    overflow: hidden;
+}

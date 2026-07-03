@@ -684,34 +684,34 @@
 
                 <div class="portfolio-grid">
                     <!-- Project 1 (Video) -->
-                    <div class="portfolio-item card-glass" data-category="video" onclick="window.open('https://drive.google.com/drive/folders/1bSkKw0pH2c9cCmkfEcWo3TIlk2p1xebY?usp=sharing', '_blank')">
+                    <div class="portfolio-item card-glass" data-category="video" data-video-id="1204894846">
                         <div class="portfolio-thumb">
                             <iframe src="https://player.vimeo.com/video/1204894846?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
-                            <div class="portfolio-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                            <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
                         </div>
                     </div>
 
                     <!-- Project 2 (Video) -->
-                    <div class="portfolio-item card-glass" data-category="video" onclick="window.open('https://drive.google.com/drive/folders/1bSkKw0pH2c9cCmkfEcWo3TIlk2p1xebY?usp=sharing', '_blank')">
+                    <div class="portfolio-item card-glass" data-category="video" data-video-id="1205986172">
                         <div class="portfolio-thumb">
                             <iframe src="https://player.vimeo.com/video/1205986172?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
-                            <div class="portfolio-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                            <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
                         </div>
                     </div>
 
                     <!-- Project 3 (Video) -->
-                    <div class="portfolio-item card-glass" data-category="video" onclick="window.open('https://drive.google.com/drive/folders/1bSkKw0pH2c9cCmkfEcWo3TIlk2p1xebY?usp=sharing', '_blank')">
+                    <div class="portfolio-item card-glass" data-category="video" data-video-id="1204901697">
                         <div class="portfolio-thumb">
                             <iframe src="https://player.vimeo.com/video/1204901697?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
-                            <div class="portfolio-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                            <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
                         </div>
                     </div>
 
                     <!-- Project 4 (Video) -->
-                    <div class="portfolio-item card-glass" data-category="video" onclick="window.open('https://drive.google.com/drive/folders/1bSkKw0pH2c9cCmkfEcWo3TIlk2p1xebY?usp=sharing', '_blank')">
+                    <div class="portfolio-item card-glass" data-category="video" data-video-id="1155939899">
                         <div class="portfolio-thumb">
                             <iframe src="https://player.vimeo.com/video/1155939899?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
-                            <div class="portfolio-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                            <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
                         </div>
                     </div>
                 </div>
@@ -822,6 +822,21 @@
             </ul>
         </div>
     </footer>
+
+    <!-- Video Modal Popup -->
+    <div id="video-modal" class="vmodal-overlay" aria-hidden="true">
+        <div class="vmodal-box">
+            <button class="vmodal-close" id="vmodal-close" aria-label="Close video"><i class="fa-solid fa-xmark"></i></button>
+            <div class="vmodal-player-wrap">
+                <iframe id="vmodal-iframe" src="" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="vmodal-iframe"></iframe>
+            </div>
+            <div class="vmodal-footer">
+                <a href="https://drive.google.com/drive/folders/1bSkKw0pH2c9cCmkfEcWo3TIlk2p1xebY?usp=sharing" target="_blank" class="btn btn-primary vmodal-drive-btn">
+                    <i class="fa-solid fa-folder-open"></i> Browse More Videos on Drive
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- Custom JS -->
     <script src="script.js"></script>
