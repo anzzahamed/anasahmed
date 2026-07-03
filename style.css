@@ -1489,11 +1489,21 @@ footer {
     .portfolio-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
 }
 
 @media (max-width: 768px) {
     header {
         padding: 8px 0;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
     
     .menu-toggle {
@@ -1594,5 +1604,16 @@ footer {
     
     .portfolio-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .skills-tab-nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .tab-btn {
+        justify-content: center;
     }
 }
