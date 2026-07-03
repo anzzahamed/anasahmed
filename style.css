@@ -140,19 +140,11 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 800;
     position: relative;
     display: inline-block;
-    padding-bottom: 16px;
+    padding-bottom: 0;
 }
 
 .title-bar {
-    width: 80px;
-    height: 4px;
-    background: var(--grad-primary);
-    border-radius: 2px;
-    margin: 12px auto 0;
-}
-
-#about .title-bar, #experience .title-bar {
-    margin: 12px 0 0; /* Left align bar */
+    display: none !important; /* Hide outlines completely */
 }
 
 /* Apple-style Liquid Glassmorphic Cards */
@@ -393,7 +385,7 @@ header.scrolled {
    HERO SECTION (Large Background Portrait)
    ========================================== */
 .hero-section {
-    padding: 220px 0 140px;
+    padding: 160px 0 60px; /* Tightened Hero padding to remove giant scroll indicators gaps */
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -531,7 +523,7 @@ header.scrolled {
    ABOUT & DETAILS SECTION
    ========================================== */
 .about-section {
-    padding: 100px 0;
+    padding: 60px 0; /* Reduced to tighten space */
 }
 
 .about-grid {
@@ -681,7 +673,7 @@ header.scrolled {
    EXPERIENCE SECTION (TIMELINE)
    ========================================== */
 .experience-section {
-    padding: 100px 0;
+    padding: 60px 0; /* Reduced to tighten space */
     position: relative;
 }
 
@@ -798,7 +790,7 @@ header.scrolled {
    SKILLS SECTION
    ========================================== */
 .skills-section {
-    padding: 100px 0;
+    padding: 60px 0; /* Reduced to tighten space */
 }
 
 /* Skills Tabs Styling */
@@ -914,7 +906,7 @@ header.scrolled {
    PORTFOLIO SECTION
    ========================================== */
 .portfolio-section {
-    padding: 100px 0;
+    padding: 60px 0; /* Reduced to tighten space */
 }
 
 /* External Promotion Cards */
@@ -1122,7 +1114,7 @@ header.scrolled {
    CONTACT SECTION
    ========================================== */
 .contact-section {
-    padding: 100px 0;
+    padding: 60px 0; /* Reduced to tighten space */
 }
 
 .contact-grid {
@@ -1337,7 +1329,7 @@ header.scrolled {
    THANK YOU SECTION
    ========================================= */
 .thank-you-section {
-    padding: 100px 0;
+    padding: 60px 0; /* Reduced to tighten space */
     background: var(--bg-primary);
     display: flex;
     align-items: center;
@@ -1394,7 +1386,7 @@ header.scrolled {
    ========================================= */
 footer {
     border-top: 1px solid var(--border-glass);
-    padding: 40px 0;
+    padding: 24px 0; /* Reduced from 40px */
     background-color: #030305;
 }
 

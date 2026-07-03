@@ -279,9 +279,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const maxScroll = heroHeight + aboutHeight + expHeight;
             
-            // Map scroll within the 3 sections directly to animation frames
+            // Map scroll within the 3 sections directly to animation frames, bypassing the initial camera zoom stretch frames
             const fraction = Math.min(1, Math.max(0, scrollTop / maxScroll));
-            const targetFrame = Math.round(fraction * (totalFrames - 1));
+            const startFrame = 20;
+            const targetFrame = startFrame + Math.round(fraction * (totalFrames - 1 - startFrame));
             
             // Render frame instantly for zero lag responsiveness
             drawFrame(targetFrame);
