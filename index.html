@@ -298,58 +298,57 @@
                     <div class="title-bar"></div>
                 </div>
 
-                <div class="skills-grid">
-                    <!-- Photoshop -->
-                    <div class="skill-card card-glass">
-                        <div class="skill-icon-wrap">
+                <!-- Tab Navigation Buttons -->
+                <div class="skills-tab-nav">
+                    <button class="tab-btn active" data-tab="creative">
+                        <i class="fa-solid fa-palette"></i> Creative & Design Apps
+                    </button>
+                    <button class="tab-btn" data-tab="ai">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> AI & Automation Toolkit
+                    </button>
+                </div>
+
+                <!-- Tab 1: Creative & Design Apps -->
+                <div id="skills-tab-creative" class="skills-tab-content active">
+                    <div class="skills-compact-grid">
+                        <!-- Photoshop -->
+                        <div class="skill-compact-card card-glass">
                             <div class="skill-icon ps">Ps</div>
+                            <div class="skill-details">
+                                <h4>Adobe Photoshop</h4>
+                                <span class="skill-tag">Design & Branding</span>
+                            </div>
                         </div>
-                        <h3>Adobe Photoshop</h3>
-                        <p>Branding, print production, layout designs, and high-fidelity image editing.</p>
-                        <div class="skill-level-bar">
-                            <div class="skill-level-fill" data-progress="95%"></div>
-                        </div>
-                    </div>
-
-                    <!-- Illustrator -->
-                    <div class="skill-card card-glass">
-                        <div class="skill-icon-wrap">
+                        
+                        <!-- Illustrator -->
+                        <div class="skill-compact-card card-glass">
                             <div class="skill-icon ai">Ai</div>
+                            <div class="skill-details">
+                                <h4>Adobe Illustrator</h4>
+                                <span class="skill-tag">Vector & Illustration</span>
+                            </div>
                         </div>
-                        <h3>Adobe Illustrator</h3>
-                        <p>Vector design, brand identity systems, icons, logo design, and illustrations.</p>
-                        <div class="skill-level-bar">
-                            <div class="skill-level-fill" data-progress="90%"></div>
-                        </div>
-                    </div>
-
-                    <!-- After Effects -->
-                    <div class="skill-card card-glass">
-                        <div class="skill-icon-wrap">
+                        
+                        <!-- After Effects -->
+                        <div class="skill-compact-card card-glass">
                             <div class="skill-icon ae">Ae</div>
+                            <div class="skill-details">
+                                <h4>Adobe After Effects</h4>
+                                <span class="skill-tag">Motion Graphics & VFX</span>
+                            </div>
                         </div>
-                        <h3>Adobe After Effects</h3>
-                        <p>Motion design, title sequences, logo animation, tracking, and visual effects.</p>
-                        <div class="skill-level-bar">
-                            <div class="skill-level-fill" data-progress="88%"></div>
-                        </div>
-                    </div>
-
-                    <!-- Premiere Pro -->
-                    <div class="skill-card card-glass">
-                        <div class="skill-icon-wrap">
+                        
+                        <!-- Premiere Pro -->
+                        <div class="skill-compact-card card-glass">
                             <div class="skill-icon pr">Pr</div>
+                            <div class="skill-details">
+                                <h4>Adobe Premiere Pro</h4>
+                                <span class="skill-tag">Video Editing & Audio</span>
+                            </div>
                         </div>
-                        <h3>Adobe Premiere Pro</h3>
-                        <p>Video editing, color grading, sound design, and promotional media assembly.</p>
-                        <div class="skill-level-bar">
-                            <div class="skill-level-fill" data-progress="92%"></div>
-                        </div>
-                    </div>
-
-                    <!-- Figma -->
-                    <div class="skill-card card-glass">
-                        <div class="skill-icon-wrap">
+                        
+                        <!-- Figma -->
+                        <div class="skill-compact-card card-glass">
                             <div class="skill-icon fig">
                                 <svg viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 0C13.7533 0 9.5 4.25333 9.5 9.5C9.5 14.7467 13.7533 19 19 19H28.5V9.5C28.5 4.25333 24.2467 0 19 0Z" fill="#F24E1E"/>
@@ -359,23 +358,132 @@
                                     <path d="M0 9.5C0 4.25333 4.25333 0 9.5 0H19V19H9.5C4.25333 19 0 14.7467 0 9.5Z" fill="#FF7262"/>
                                 </svg>
                             </div>
+                            <div class="skill-details">
+                                <h4>Figma</h4>
+                                <span class="skill-tag">UI/UX & Prototyping</span>
+                            </div>
                         </div>
-                        <h3>Figma</h3>
-                        <p>UI/UX layouts, structural wireframing, prototype modeling, and style systems.</p>
-                        <div class="skill-level-bar">
-                            <div class="skill-level-fill" data-progress="85%"></div>
+
+                        <!-- DaVinci Resolve -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon dr">Dr</div>
+                            <div class="skill-details">
+                                <h4>DaVinci Resolve</h4>
+                                <span class="skill-tag">Color Grading & FX</span>
+                            </div>
+                        </div>
+
+                        <!-- Final Cut Pro -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon fc">Fc</div>
+                            <div class="skill-details">
+                                <h4>Final Cut Pro</h4>
+                                <span class="skill-tag">NLE Video Editing</span>
+                            </div>
+                        </div>
+
+                        <!-- Adobe Lightroom -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon lr">Lr</div>
+                            <div class="skill-details">
+                                <h4>Adobe Lightroom</h4>
+                                <span class="skill-tag">Photo & Color grading</span>
+                            </div>
+                        </div>
+
+                        <!-- Affinity -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon af">Af</div>
+                            <div class="skill-details">
+                                <h4>Affinity Suite</h4>
+                                <span class="skill-tag">Vector & Layout Design</span>
+                            </div>
+                        </div>
+
+                        <!-- CapCut -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon cc">Cc</div>
+                            <div class="skill-details">
+                                <h4>CapCut</h4>
+                                <span class="skill-tag">Social Media Reels</span>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- AI & Automation -->
-                    <div class="skill-card card-glass">
-                        <div class="skill-icon-wrap">
-                            <div class="skill-icon ai-tool"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <!-- Tab 2: AI & Automation Toolkit -->
+                <div id="skills-tab-ai" class="skills-tab-content">
+                    <div class="skills-compact-grid">
+                        <!-- Higgsfield -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon hf">Hf</div>
+                            <div class="skill-details">
+                                <h4>Higgsfield</h4>
+                                <span class="skill-tag">AI Video Generation</span>
+                            </div>
                         </div>
-                        <h3>AI Creative & Automation</h3>
-                        <p>Image generation, AI video enhancement, custom scripts, and visual synthesis.</p>
-                        <div class="skill-level-bar">
-                            <div class="skill-level-fill" data-progress="90%"></div>
+
+                        <!-- Veo 3 -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon veo">Veo</div>
+                            <div class="skill-details">
+                                <h4>Google Veo 3</h4>
+                                <span class="skill-tag">Cinematic Video AI</span>
+                            </div>
+                        </div>
+
+                        <!-- Kling AI -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon kl">Kl</div>
+                            <div class="skill-details">
+                                <h4>Kling AI</h4>
+                                <span class="skill-tag">Motion & Film Gen</span>
+                            </div>
+                        </div>
+
+                        <!-- Claude -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon cl">Cl</div>
+                            <div class="skill-details">
+                                <h4>Claude AI</h4>
+                                <span class="skill-tag">Coding & Writing Partner</span>
+                            </div>
+                        </div>
+
+                        <!-- Google AI Studio -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon gas">Studio</div>
+                            <div class="skill-details">
+                                <h4>Google AI Studio</h4>
+                                <span class="skill-tag">Prompting & Integrations</span>
+                            </div>
+                        </div>
+
+                        <!-- Nano -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon nn">Nano</div>
+                            <div class="skill-details">
+                                <h4>Gemini Nano</h4>
+                                <span class="skill-tag">On-Device LLM Pipeline</span>
+                            </div>
+                        </div>
+
+                        <!-- Banana Chat -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon ba">Bn</div>
+                            <div class="skill-details">
+                                <h4>Banana chat</h4>
+                                <span class="skill-tag">AI Bot Integration</span>
+                            </div>
+                        </div>
+
+                        <!-- ChatGPT -->
+                        <div class="skill-compact-card card-glass">
+                            <div class="skill-icon gpt"><i class="fa-solid fa-bolt"></i></div>
+                            <div class="skill-details">
+                                <h4>ChatGPT</h4>
+                                <span class="skill-tag">AI Copilot & Synthesis</span>
+                            </div>
                         </div>
                     </div>
                 </div>
