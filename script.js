@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (img && img.complete && index !== lastDrawnFrame) {
                 heroCtx.clearRect(0, 0, canvasWidth, canvasHeight);
                 
-                // Draw cover image (no stretch, preserves aspect ratio)
+                // Draw contain image (no crop, fits entirely inside the canvas)
                 const imgWidth = img.width;
                 const imgHeight = img.height;
                 const imgRatio = imgWidth / imgHeight;
@@ -224,15 +224,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 let drawWidth, drawHeight, drawX, drawY;
                 if (canvasRatio > imgRatio) {
+                    // Desktop view: height is 100% of viewport, width scales proportionally.
+                    // Positioned on the right side with a 3% screen width margin from the right edge.
+                    drawHeight = canvasHeight;
+                    drawWidth = canvasHeight * imgRatio;
+                    drawX = canvasWidth - drawWidth - (canvasWidth * 0.03);
+                    drawY = 0;
+                } else {
+                    // Mobile view: width is 100% of viewport, height scales proportionally, centered.
                     drawWidth = canvasWidth;
                     drawHeight = canvasWidth / imgRatio;
                     drawX = 0;
                     drawY = (canvasHeight - drawHeight) / 2;
-                } else {
-                    drawHeight = canvasHeight;
-                    drawWidth = canvasHeight * imgRatio;
-                    drawX = (canvasWidth - drawWidth) / 2;
-                    drawY = 0;
                 }
                 
                 heroCtx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
@@ -298,18 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('scroll', updateTargetFrame, { passive: true });
         
-        // Interactive Mouse Parallax for Blurred Orbs
-        const heroOrbs = document.querySelectorAll('.hero-orb');
-        if (heroOrbs.length > 0) {
-            window.addEventListener('mousemove', (e) => {
-                const x = (e.clientX / window.innerWidth) - 0.5;
-                const y = (e.clientY / window.innerHeight) - 0.5;
-                heroOrbs.forEach((orb, index) => {
-                    const factor = (index + 1) * 35; // displacement strength
-                    orb.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
-                });
-            });
-        }
+
 
         preload();
     }
