@@ -232,11 +232,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     drawY = 0;
                 } else {
                     // Mobile view: width is 100% of viewport, height scales proportionally.
-                    // Aligned to the top of the screen.
+                    // Brought down slightly (75px) to clear the header area.
                     drawWidth = canvasWidth;
                     drawHeight = canvasWidth / imgRatio;
                     drawX = 0;
-                    drawY = 0;
+                    drawY = 75;
                 }
                 
                 heroCtx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
@@ -324,6 +324,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const activeContent = document.getElementById(`skills-tab-${tabId}`);
             if (activeContent) {
                 activeContent.classList.add('active');
+            }
+        });
+    });
+
+    // ==========================================
+    // 10. COLLAPSIBLE CONTENT (READ MORE) ON MOBILE
+    // ==========================================
+    const readMoreToggles = document.querySelectorAll('.read-more-toggle');
+
+    readMoreToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const targetId = toggle.getAttribute('data-target');
+            const targetEl = document.getElementById(targetId);
+            
+            if (targetEl) {
+                const isExpanded = targetEl.classList.toggle('expanded');
+                toggle.classList.toggle('expanded');
+                
+                // Toggle text content
+                const hasDetails = toggle.innerText.toLowerCase().includes('details');
+                const actionText = isExpanded ? (hasDetails ? 'Hide Details' : 'Read Less') : (hasDetails ? 'Read Details' : 'Read More');
+                toggle.innerHTML = `${actionText} <i class="fa-solid fa-chevron-down" style="transform: ${isExpanded ? 'rotate(180deg)' : 'none'}; transition: transform 0.3s ease;"></i>`;
             }
         });
     });

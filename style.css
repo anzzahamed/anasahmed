@@ -1445,26 +1445,35 @@ footer {
     }
 }
 
+/* Collapsible Mobile Content & Read More Toggles */
+.collapsible-mobile {
+    display: block; /* Visible by default on desktop */
+}
+
+.read-more-toggle {
+    display: none; /* Hidden by default on desktop */
+}
+
 /* ==========================================
    RESPONSIVE DESIGN BREAKPOINTS
    ========================================== */
 
 @media (max-width: 992px) {
     #hero-scroll-canvas {
-        opacity: 0.4; /* Fade down for mobile readability overlay */
-        mask-image: none;
-        -webkit-mask-image: none;
+        opacity: 0.35; /* Subtle opacity background for readability */
+        mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%) !important;
+        -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%) !important;
     }
 
     .hero-grid {
         grid-template-columns: 1fr;
-        text-align: center;
+        text-align: left; /* Left align hero layout on mobile */
     }
     
     .hero-content {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start; /* Left align elements */
         max-width: 100%;
     }
     
@@ -1475,15 +1484,17 @@ footer {
     .hero-lead {
         font-size: 1.05rem; /* Shrunk from 1.25rem */
         max-width: 100%;
-        margin-left: auto;
+        margin-left: 0;
         margin-right: auto;
         margin-bottom: 24px;
+        text-align: left;
     }
     
     .hero-quick-stats {
-        justify-content: center;
+        justify-content: flex-start; /* Left align stats */
         gap: 24px;
         padding-top: 24px;
+        text-align: left;
     }
 
     .stat-num {
@@ -1510,7 +1521,7 @@ footer {
 
 @media (max-width: 768px) {
     body {
-        font-size: 0.9rem; /* Slightly smaller base text */
+        font-size: 0.88rem; /* Slightly smaller base text */
     }
 
     header {
@@ -1578,6 +1589,42 @@ footer {
         padding: 20px !important;
     }
 
+    /* Collapsible Mobile Content & Read More Toggles */
+    .collapsible-mobile {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
+
+    .collapsible-mobile.expanded {
+        max-height: 1000px; /* Safe large value for expansion height */
+        opacity: 1;
+    }
+
+    .read-more-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #00d2ff;
+        font-weight: 600;
+        font-size: 0.82rem;
+        cursor: pointer;
+        margin-top: 14px;
+        transition: color 0.3s ease, text-shadow 0.3s ease;
+        user-select: none;
+    }
+
+    .read-more-toggle:hover {
+        color: #fff;
+        text-shadow: 0 0 8px rgba(0, 210, 255, 0.5);
+    }
+
+    .read-more-toggle i {
+        font-size: 0.75rem;
+        transition: transform 0.3s ease;
+    }
+
     /* About Section reductions */
     .about-info h3 {
         font-size: 1.35rem; /* Shrunk from 1.8rem */
@@ -1611,11 +1658,12 @@ footer {
         font-size: 0.95rem;
     }
 
-    /* Experience section (Shorter Version) */
-    .timeline-details {
-        display: none !important; /* Shorter version: hide detailed bullet lists */
+    /* Languages card mobile grid spacing helper */
+    .lang-grid .collapsible-mobile {
+        grid-column: 1 / -1;
     }
 
+    /* Experience section (Shorter Version overrides) */
     .timeline-summary {
         margin-bottom: 0px;
     }
@@ -1633,16 +1681,17 @@ footer {
     .skills-compact-grid {
         grid-template-columns: repeat(5, 1fr); /* 5 icons per row */
         justify-items: center;
-        gap: 12px;
+        gap: 16px 8px;
     }
 
     .skill-compact-card {
-        padding: 8px;
+        padding: 8px 4px;
         background: transparent;
         border: none;
         box-shadow: none;
         flex-direction: column;
         align-items: center;
+        gap: 6px;
     }
 
     .skill-compact-card:hover {
@@ -1657,7 +1706,25 @@ footer {
     }
 
     .skill-details {
-        display: none !important; /* Hide name/text details */
+        display: flex !important; /* Reveal title */
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .skill-details h4 {
+        font-size: 0.62rem !important; /* Very tiny text below icon */
+        color: var(--text-secondary);
+        margin: 0;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 62px;
+    }
+
+    .skill-tag {
+        display: none !important; /* Hide tags to save space */
     }
 
     /* Portfolio Stacked */
