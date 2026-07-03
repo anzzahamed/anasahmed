@@ -191,106 +191,106 @@ document.addEventListener('DOMContentLoaded', () => {
         let lastDrawnFrame = -1;
         let canvasWidth = 0;
         let canvasHeight = 0;
-        let lastWidth = window.innerWidth;
-        let lastHeight = window.innerHeight;
+        let lastWidth = 0;
+        let lastHeight = 0;
 
-        // Generate file paths (optimized resolution saved locally)
+        // Generate file paths
         const framePaths = [];
         for (let i = 1; i <= totalFrames; i++) {
             const frameNum = String(i).padStart(3, '0');
             framePaths.push(`assets/scroll-images/ezgif-frame-${frameNum}.jpg`);
         }
 
+        // Always sets canvas size — called once on load and on real resize/rotation
+        function initCanvas() {
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            lastWidth = canvasWidth;
+            lastHeight = canvasHeight;
+            heroCanvas.width = canvasWidth;
+            heroCanvas.height = canvasHeight;
+        }
+
+        // Only responds to real layout changes (not iOS address-bar micro-resizes)
         function resizeCanvas() {
             const newWidth = window.innerWidth;
             const newHeight = window.innerHeight;
-            
-            // On iOS Safari, vertical scrolling triggers resize events due to address bar collapse/expansion.
-            // Only trigger a redraw if the width changes, or if height changes significantly (e.g. screen rotation).
             const heightDiff = Math.abs(newHeight - lastHeight);
-            if (newWidth === lastWidth && heightDiff < 120) {
-                return; // Skip address-bar-triggered layout changes
-            }
-            
+            // Skip if width is same AND height shift is tiny (iOS address bar)
+            if (newWidth === lastWidth && heightDiff < 120) return;
+
             lastWidth = newWidth;
             lastHeight = newHeight;
-            
             canvasWidth = newWidth;
             canvasHeight = newHeight;
             heroCanvas.width = canvasWidth;
             heroCanvas.height = canvasHeight;
-            
+
             if (imagesLoaded) {
                 lastDrawnFrame = -1;
                 updateTargetFrame();
             }
         }
 
+        initCanvas(); // Set canvas size BEFORE any image loads
         window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
 
         function drawFrame(index) {
             const img = images[index];
-            if (img && img.complete && index !== lastDrawnFrame) {
+            if (img && img.complete && img.naturalWidth > 0 && index !== lastDrawnFrame) {
                 heroCtx.clearRect(0, 0, canvasWidth, canvasHeight);
-                
-                // Draw contain image (no crop, fits entirely inside the canvas)
-                const imgWidth = img.width;
-                const imgHeight = img.height;
-                const imgRatio = imgWidth / imgHeight;
+
+                const imgRatio = img.naturalWidth / img.naturalHeight;
                 const canvasRatio = canvasWidth / canvasHeight;
-                
+
                 let drawWidth, drawHeight, drawX, drawY;
                 if (canvasRatio > imgRatio) {
-                    // Desktop view: height is 100% of viewport, width scales proportionally.
-                    // Positioned on the right side with a 3% screen width margin from the right edge.
+                    // Desktop: image fills full height, placed on right
                     drawHeight = canvasHeight;
                     drawWidth = canvasHeight * imgRatio;
                     drawX = canvasWidth - drawWidth - (canvasWidth * 0.03);
                     drawY = 0;
                 } else {
-                    // Mobile view: width is 100% of viewport, height scales proportionally.
-                    // Brought down slightly (75px) to clear the header area.
+                    // Mobile: image fills full width, offset down past header
                     drawWidth = canvasWidth;
                     drawHeight = canvasWidth / imgRatio;
                     drawX = 0;
                     drawY = 75;
                 }
-                
+
                 heroCtx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
                 lastDrawnFrame = index;
             }
         }
 
         function preload() {
-            const startFrame = 20; // Bypassed first 20 zoom frames
+            const startFrame = 20; // Skip initial camera zoom-in frames
+
+            // Load the start frame FIRST so it displays immediately
             const firstImg = images[startFrame];
             firstImg.src = framePaths[startFrame];
-            
+
             firstImg.onload = () => {
                 imagesLoaded = true;
-                resizeCanvas(); // Draw initial frame immediately!
-                
-                // Now load all the remaining frames in the background
+                // Draw directly — do NOT call resizeCanvas (iOS guard would block it)
+                drawFrame(startFrame);
+                heroCanvas.style.opacity = '0.8';
+                heroCanvas.style.visibility = 'visible';
+
+                // Background-load all remaining frames after first is shown
                 for (let i = 0; i < totalFrames; i++) {
                     if (i === startFrame) continue;
-                    const img = images[i];
-                    img.src = framePaths[i];
-                    img.onload = () => {
-                        loadedCount++;
-                    };
-                    img.onerror = () => {
-                        loadedCount++;
-                    };
+                    images[i].src = framePaths[i];
+                    images[i].onload  = () => { loadedCount++; };
+                    images[i].onerror = () => { loadedCount++; };
                 }
             };
-            
+
             firstImg.onerror = () => {
+                // Fallback: load all frames
                 imagesLoaded = true;
                 for (let i = 0; i < totalFrames; i++) {
-                    if (i === startFrame) continue;
-                    const img = images[i];
-                    img.src = framePaths[i];
+                    images[i].src = framePaths[i];
                 }
             };
         }
