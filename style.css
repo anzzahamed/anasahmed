@@ -132,9 +132,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 64px;
 }
 
-#about .section-title, #experience .section-title {
-    text-align: left; /* Left align as requested */
-}
+/* Center section title default */
 
 .section-title h2 {
     font-size: 2.5rem;
@@ -835,21 +833,27 @@ header.scrolled {
     top: 12px; /* Aligned vertically with first line of title text */
     width: 44px;
     height: 44px;
-    z-index: 10;
-}
-
-.company-logo-wrap {
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
-    display: flex;
+    z-index: 12 !important; /* Forces it to sit strictly above vertical line */
+    background: #040407 !important; /* Solid dark background matching page body */
+    border: 2px solid var(--border-glass) !important;
+    border-radius: 50% !important; /* Beautiful circular framing mask */
+    display: flex !important;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+}
+
+.company-logo-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    overflow: hidden;
+    transition: var(--transition-smooth);
 }
 
 .company-logo-wrap img {
@@ -2216,20 +2220,35 @@ footer {
         margin-top: 240px !important; /* Shift hero text down on mobile so the scroll canvas is visible above it */
     }
 
-    /* Decent-sized buttons & tabs on mobile */
+    /* Decent-sized buttons & horizontal non-wrap tabs on mobile */
     .btn {
         padding: 9px 20px !important;
         font-size: 0.82rem !important;
         border-radius: 10px !important;
     }
 
-    .portfolio-tab-btn {
-        padding: 7px 16px !important;
-        font-size: 0.78rem !important;
+    .skills-tab-nav, .portfolio-tabs {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        max-width: 100% !important;
+        border-radius: 30px !important;
+        padding: 4px !important;
+        gap: 0 !important;
+        width: max-content !important;
+        margin: 0 auto 24px !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Hide scrollbar Firefox */
+    }
+
+    .skills-tab-nav::-webkit-scrollbar, .portfolio-tabs::-webkit-scrollbar {
+        display: none !important; /* Hide scrollbar Chrome/Safari */
     }
 
     .tab-btn, .portfolio-tab-btn {
-        padding: 7px 14px !important;
+        flex-shrink: 0 !important; /* Prevent tab buttons from wrapping or shrinking */
+        padding: 8px 16px !important;
         font-size: 0.78rem !important;
     }
 
