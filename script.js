@@ -137,10 +137,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ==========================================
-    // 8. CONTACT FORM SIMULATION
     // ==========================================
+    // 8. CONTACT FORM SIMULATION & TOAST FEEDBACK
+    // ==========================================
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast-popup toast-${type}`;
+        toast.innerHTML = `
+            <div class="toast-content">
+                <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        document.body.appendChild(toast);
+        
+        // Trigger slide in
+        setTimeout(() => toast.classList.add('active'), 50);
+        
+        // Auto remove after 4.5 seconds
+        setTimeout(() => {
+            toast.classList.remove('active');
+            setTimeout(() => toast.remove(), 400);
+        }, 4500);
+    }
+
     const contactForm = document.getElementById('contact-form');
-    const formFeedback = document.getElementById('form-feedback');
 
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
@@ -152,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const messageVal = document.getElementById('message').value.trim();
 
             if (!nameVal || !emailVal || !subjectVal || !messageVal) {
-                showFeedback('Please fill out all fields.', 'error');
+                showToast('Please fill out all fields.', 'error');
                 return;
             }
 
@@ -167,7 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new URLSearchParams();
             formData.append('entry.1451078961', nameVal);
             formData.append('entry.1433838400', emailVal);
-            // Combine Subject and Message since Google Form has Name, Email, Message
             const combinedMessage = `Subject: ${subjectVal}\n\nMessage:\n${messageVal}`;
             formData.append('entry.59278504', combinedMessage);
 
@@ -183,18 +203,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
                 
-                showFeedback('Thank you! Your message has been sent successfully.', 'success');
+                showToast('successfully sent the message', 'success');
                 contactForm.reset();
-                
-                setTimeout(() => {
-                    formFeedback.classList.remove('success', 'error');
-                    formFeedback.style.display = 'none';
-                }, 5000);
             })
             .catch((error) => {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
-                showFeedback('Oops! Something went wrong. Please try again.', 'error');
+                showToast('Oops! Something went wrong. Please try again.', 'error');
                 console.error('Submission error:', error);
             });
         });
@@ -889,6 +904,47 @@ window.addEventListener('load', () => {
             
             // Add entrance class to reveal hero elements with a smooth premium stagger motion
             document.body.classList.add('site-revealed');
+
+            // Trigger Mobile Desktop Suggestion Popup
+            const noticePopup = document.getElementById('mobile-notice-popup');
+            if (noticePopup && window.innerWidth <= 768) {
+                setTimeout(() => {
+                    noticePopup.classList.add('active');
+                    
+                    // Auto hide after 6.5 seconds
+                    const autoHideTimer = setTimeout(() => {
+                        closeNotice();
+                    }, 6500);
+                    
+                    function closeNotice() {
+                        if (noticePopup.classList.contains('active')) {
+                            noticePopup.classList.remove('active');
+                            clearTimeout(autoHideTimer);
+                            document.removeEventListener('click', handleOutsideTap);
+                            document.removeEventListener('touchstart', handleOutsideTap);
+                        }
+                    }
+                    
+                    // Close on X button click
+                    const closeBtn = noticePopup.querySelector('.mobile-notice-close');
+                    if (closeBtn) {
+                        closeBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            closeNotice();
+                        });
+                    }
+                    
+                    // Close when user taps anywhere else
+                    function handleOutsideTap(e) {
+                        closeNotice();
+                    }
+                    
+                    setTimeout(() => {
+                        document.addEventListener('click', handleOutsideTap);
+                        document.addEventListener('touchstart', handleOutsideTap, { passive: true });
+                    }, 200); // safety gap
+                }, 2200); // display 2.2s after Loader finishes collapse
+            }
         }, 1300); // 1.3s duration matches progress animation perfectly
     }
 });
