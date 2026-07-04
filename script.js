@@ -273,8 +273,14 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', resizeCanvas);
 
         function drawFrame(index) {
-            const img = images[index];
-            if (img && img.complete && img.naturalWidth > 0 && index !== lastDrawnFrame) {
+            // Map request to nearest preloaded frame index
+            let targetIndex = index;
+            if (index % 3 !== 0 && index !== startFrame && index !== 0 && index !== totalFrames - 1) {
+                targetIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(index / 3) * 3));
+            }
+
+            const img = images[targetIndex];
+            if (img && img.complete && img.naturalWidth > 0 && targetIndex !== lastDrawnFrame) {
                 heroCtx.clearRect(0, 0, canvasWidth, canvasHeight);
 
                 const imgRatio = img.naturalWidth / img.naturalHeight;
@@ -294,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 heroCtx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-                lastDrawnFrame = index;
+                lastDrawnFrame = targetIndex;
             }
         }
 
@@ -312,16 +318,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 heroCanvas.style.opacity = '0.8';
                 heroCanvas.style.visibility = 'visible';
 
-                // Deferred loading of remaining frames to boost initial page speed
+                // Load every 3rd frame to save 67% bandwidth and load instantly
                 let preloadStarted = false;
                 const startPreloadRemaining = () => {
                     if (preloadStarted) return;
                     preloadStarted = true;
                     for (let i = 0; i < totalFrames; i++) {
                         if (i === startFrame) continue;
-                        images[i].src = framePaths[i];
-                        images[i].onload  = () => { loadedCount++; };
-                        images[i].onerror = () => { loadedCount++; };
+                        
+                        // Load only multiples of 3, boundary frames, and start frame
+                        if (i % 3 === 0 || i === startFrame || i === 0 || i === totalFrames - 1) {
+                            images[i].src = framePaths[i];
+                            images[i].onload  = () => { loadedCount++; };
+                            images[i].onerror = () => { loadedCount++; };
+                        }
                     }
                 };
 
@@ -344,20 +354,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let targetScrollTop = 0;
         let currentScrollTop = 0;
+        let scrollLoopRunning = false;
 
         function updateTargetFrame() {
             targetScrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+            if (!scrollLoopRunning) {
+                scrollLoopRunning = true;
+                requestAnimationFrame(smoothScrollLoop);
+            }
         }
 
         function smoothScrollLoop() {
-            // Buttery smooth ease-out inertia calculation
+            // Increase LERP factor to 0.28 to completely eliminate scrolling lag
             const diff = targetScrollTop - currentScrollTop;
-            if (Math.abs(diff) > 0.08) {
-                currentScrollTop += diff * 0.09;
+            if (Math.abs(diff) > 0.15) {
+                currentScrollTop += diff * 0.28;
+                drawAndFade();
+                requestAnimationFrame(smoothScrollLoop);
             } else {
                 currentScrollTop = targetScrollTop;
+                drawAndFade();
+                scrollLoopRunning = false; // Stop requestAnimationFrame when static to save CPU/GPU
             }
+        }
 
+        function drawAndFade() {
             if (imagesLoaded) {
                 const heroHeight = heroSection?.offsetHeight || 0;
                 const aboutHeight = aboutSection?.offsetHeight || 0;
@@ -365,14 +386,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const maxScroll = heroHeight + aboutHeight + expHeight;
                 
-                // Map the smooth scroll offset to frame indices
                 const fraction = Math.min(1, Math.max(0, currentScrollTop / maxScroll));
-                const startFrame = 20;
                 const targetFrame = startFrame + Math.round(fraction * (totalFrames - 1 - startFrame));
                 
                 drawFrame(targetFrame);
                 
-                // Fade canvas out smoothly near the end of the timeline
                 const fadeStart = maxScroll - 200;
                 const fadeEnd = maxScroll + 200;
                 
@@ -385,13 +403,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     heroCanvas.style.visibility = 'visible';
                 }
             }
-
-            requestAnimationFrame(smoothScrollLoop);
         }
 
-        // Start the smooth drawing animation loop
-        smoothScrollLoop();
-
+        // Start scroll tracker loop on scroll trigger instead of infinite background loop
         window.addEventListener('scroll', updateTargetFrame, { passive: true });
         
 
@@ -826,12 +840,14 @@ function initPortfolioFilter() {
 window.addEventListener('load', () => {
     const loader = document.getElementById('intro-loader');
     if (loader) {
-        // Lock body scrolling temporarily while loading
         document.body.classList.add('overflow-hidden');
         
         setTimeout(() => {
             loader.classList.add('fade-out');
             document.body.classList.remove('overflow-hidden');
+            
+            // Add entrance class to reveal hero elements with a smooth premium stagger motion
+            document.body.classList.add('site-revealed');
         }, 1300); // 1.3s duration matches progress animation perfectly
     }
 });

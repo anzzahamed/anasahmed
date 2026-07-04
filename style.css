@@ -323,12 +323,12 @@ header.scrolled {
     justify-content: space-between;
     max-width: 1760px; /* Widened header container to match main container */
     margin: 0 auto;
-    padding: 16px 24px;
+    padding: 12px 24px; /* Shrunk padding from 16px to decrease height */
     transition: var(--transition-smooth);
 }
 
 .logo {
-    font-size: 1.35rem;
+    font-size: 1.22rem; /* Shrunk logo text size from 1.35rem */
     font-weight: 800;
     letter-spacing: -0.03em;
     display: flex;
@@ -1864,11 +1864,30 @@ footer {
     }
 
     header {
-        padding: 8px 0;
+        padding: 4px 0 !important;
+    }
+
+    .header-container {
+        padding: 8px 16px !important; /* Extremely tight compact container height on mobile */
+    }
+
+    .logo {
+        font-size: 1.05rem !important; /* Smaller logo name on phone viewports */
+    }
+
+    .logo-dot {
+        font-size: 1.3rem !important;
     }
 
     .menu-toggle {
         display: flex;
+        width: 20px !important; /* Compact width */
+        height: 13px !important; /* Compact height */
+    }
+
+    .menu-toggle .bar {
+        height: 1.5px !important; /* Thinner line elements */
+        border-radius: 1px !important;
     }
     
     .nav-menu {
@@ -1904,15 +1923,15 @@ footer {
     }
     
     .menu-toggle.active .bar:nth-child(1) {
-        transform: translateY(8px) rotate(45deg);
+        transform: translateY(6px) rotate(45deg) !important;
     }
     
     .menu-toggle.active .bar:nth-child(2) {
-        opacity: 0;
+        opacity: 0 !important;
     }
     
     .menu-toggle.active .bar:nth-child(3) {
-        transform: translateY(-8px) rotate(-45deg);
+        transform: translateY(-6px) rotate(-45deg) !important;
     }
 
     .section-title h2 {
@@ -2642,14 +2661,14 @@ body.vmodal-open {
     font-family: var(--font-heading);
     font-size: 1.8rem;
     font-weight: 800;
-    letter-spacing: 0.18em;
     color: #fff;
     text-transform: uppercase;
-    animation: loaderPulse 1.8s infinite ease-in-out;
+    animation: loaderReveal 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.4) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    opacity: 0;
 }
 
 .loader-line {
@@ -2659,14 +2678,16 @@ body.vmodal-open {
     animation: loaderProgress 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes loaderPulse {
-    0%, 100% {
-        opacity: 0.7;
-        transform: scale(0.98);
+@keyframes loaderReveal {
+    0% {
+        opacity: 0;
+        letter-spacing: 0.05em;
+        transform: translateY(12px);
     }
-    50% {
+    100% {
         opacity: 1;
-        transform: scale(1.0);
+        letter-spacing: 0.24em; /* Luxury cinematic tracking expand */
+        transform: translateY(0);
     }
 }
 
@@ -2677,4 +2698,33 @@ body.vmodal-open {
     100% {
         width: 120px;
     }
+}
+
+/* Site Entrance Cinematic Stagger Reveal */
+.hero-content, .hero-availability, .hero-quick-stats, #header {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-revealed .hero-content, 
+.site-revealed .hero-availability, 
+.site-revealed .hero-quick-stats,
+.site-revealed #header {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Delay configs for staggered clean motion */
+.site-revealed #header {
+    transition-delay: 0.1s;
+}
+.site-revealed .hero-availability {
+    transition-delay: 0.25s;
+}
+.site-revealed .hero-content {
+    transition-delay: 0.4s;
+}
+.site-revealed .hero-quick-stats {
+    transition-delay: 0.55s;
 }
