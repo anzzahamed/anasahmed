@@ -984,62 +984,55 @@ header.scrolled {
     padding: 40px 0;
 }
 
-/* Skills Tabs Styling */
-.skills-tab-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 20px; /* Reduced to leave room for label indicator below */
-}
-
-.tab-btn {
+/* Skills & Portfolio Sliding Indicator Tabs styling */
+.skills-tab-nav, .portfolio-tabs {
+    position: relative;
+    display: inline-flex;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-glass);
+    border-radius: 30px;
+    padding: 4px;
+    gap: 0;
+    width: max-content;
+    margin: 0 auto 36px;
+    backdrop-filter: blur(10px);
+}
+
+.tab-slider-indicator, .portfolio-slider-indicator {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    bottom: 4px;
+    background: var(--text-primary); /* Premium white indicator */
+    border-radius: 30px;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.18);
+}
+
+.tab-btn, .portfolio-tab-btn {
+    position: relative;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 30px !important;
     color: var(--text-secondary);
-    width: 38px;
-    height: 38px;
-    border-radius: 50% !important; /* Perfect circle shape */
+    padding: 10px 24px;
     font-family: var(--font-heading);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     cursor: pointer;
-    transition: var(--transition-smooth);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-    padding: 0;
+    transition: color 0.3s ease, transform 0.3s ease;
+    z-index: 2; /* Sits above indicator */
 }
 
-.tab-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
+.tab-btn:hover, .portfolio-tab-btn:hover {
     color: var(--text-primary);
-    border-color: var(--border-highlight);
-    transform: translateY(-2px);
+    transform: translateY(0) !important; /* Lock translation shift on hover for slide tabs */
 }
 
-.tab-btn.active {
-    background: var(--text-primary) !important; /* Solid clean active indicator */
-    color: #040407 !important; /* Muted dark character color matching Hadef */
-    border-color: transparent;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
-}
-
-/* Active Label Indicator Styling */
-.skills-tab-label-wrap {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.tab-label-text {
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #c084fc; /* Soft purple label */
-    text-shadow: 0 0 10px rgba(168, 85, 247, 0.35);
-    transition: opacity 0.25s ease;
+.tab-btn.active, .portfolio-tab-btn.active {
+    color: #040407 !important; /* Dark color inside white indicator sliding pill */
 }
 
 /* Tab Content Transitions */
@@ -1693,8 +1686,8 @@ footer {
    ========================================== */
 .scroll-reveal {
     opacity: 0;
-    transform: translateY(18px); /* Shrunk initial offset for cleaner, more modern motion */
-    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(32px); /* Larger offset for that slow premium rise reveal */
+    transition: opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), transform 1.6s cubic-bezier(0.16, 1, 0.3, 1); /* Slower fluid rise curves */
     will-change: transform, opacity;
 }
 
@@ -1709,6 +1702,33 @@ footer {
 .scroll-reveal.stagger-3 { transition-delay: 0.36s; }
 .scroll-reveal.stagger-4 { transition-delay: 0.48s; }
 .scroll-reveal.stagger-5 { transition-delay: 0.6s; }
+
+/* Small CV Action Button */
+.btn-small-cv {
+    width: auto !important;
+    max-width: max-content !important;
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+}
+
+@keyframes circleCollapse {
+    0% {
+        clip-path: circle(100% at 50% 50%);
+        opacity: 1;
+    }
+    60% {
+        opacity: 1;
+    }
+    100% {
+        clip-path: circle(0% at 50% 50%);
+        opacity: 0;
+        visibility: hidden;
+    }
+}
 
 .fade-in {
     opacity: 0;
@@ -2141,12 +2161,19 @@ footer {
     }
     
     .hero-actions {
-        flex-direction: column;
-        width: 100%;
+        flex-direction: row !important; /* 2x2 horizontal side-by-side buttons */
+        width: 100% !important;
+        gap: 10px !important;
     }
     
     .hero-actions .btn {
-        width: 100%;
+        flex: 1 !important;
+        padding: 10px 8px !important;
+        font-size: 0.74rem !important;
+        white-space: nowrap !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
     
     .timeline {
@@ -2201,7 +2228,7 @@ footer {
         font-size: 0.78rem !important;
     }
 
-    .tab-btn {
+    .tab-btn, .portfolio-tab-btn {
         padding: 7px 14px !important;
         font-size: 0.78rem !important;
     }
@@ -2213,18 +2240,21 @@ footer {
     
     .timeline::after {
         left: 22px !important; /* Center vertical track line relative to scaled items */
+        z-index: 1 !important; /* Sits behind markers logo */
     }
     
     .timeline-marker-logo {
-        left: -40px !important; /* Perfectly centered on vertical line */
+        left: -39px !important; /* Centers exactly on the vertical line track */
         top: 12px !important; /* Aligned vertically with first line of title text */
         width: 34px !important;
         height: 34px !important;
+        z-index: 5 !important; /* Overlaps vertical connector line */
     }
 
     .company-logo-wrap {
         width: 34px !important;
         height: 34px !important;
+        background: #fff !important; /* Clear overlap background block */
     }
 
     /* Collapse experience summaries by default on mobile */
@@ -2601,44 +2631,7 @@ body.vmodal-open {
     }
 }
 
-/* Portfolio Tabs & Filter Buttons */
-.portfolio-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 40px;
-    margin-top: 16px;
-}
-
-.portfolio-tab-btn {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: var(--text-secondary);
-    padding: 10px 24px;
-    border-radius: 30px;
-    font-family: var(--font-heading);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition-fast);
-}
-
-.portfolio-tab-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    transform: translateY(-2px);
-}
-
-.portfolio-tab-btn.active {
-    background: var(--grad-primary);
-    color: #fff;
-    border-color: transparent;
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
-}
+/* Consolidated premium sliding tabs used for both portfolio and skills nav */
 
 /* Blur dummy graphic design mockups as requested by user */
 .portfolio-item[data-category="graphic"] .portfolio-thumb img {
@@ -2671,8 +2664,7 @@ body.vmodal-open {
 }
 
 #intro-loader.fade-out {
-    opacity: 0;
-    visibility: hidden;
+    animation: circleCollapse 1.3s cubic-bezier(0.85, 0, 0.15, 1) forwards;
     pointer-events: none;
 }
 

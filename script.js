@@ -417,6 +417,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.skills-tab-content');
+    const skillsTabNav = document.querySelector('.skills-tab-nav');
+    const skillsIndicator = document.querySelector('.tab-slider-indicator');
+
+    function updateSkillsIndicator() {
+        if (!skillsTabNav || !skillsIndicator) return;
+        const activeBtn = skillsTabNav.querySelector('.tab-btn.active');
+        if (activeBtn) {
+            const navRect = skillsTabNav.getBoundingClientRect();
+            const btnRect = activeBtn.getBoundingClientRect();
+            const leftOffset = btnRect.left - navRect.left;
+            skillsIndicator.style.transform = `translateX(${leftOffset}px)`;
+            skillsIndicator.style.width = `${btnRect.width}px`;
+        }
+    }
 
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -426,21 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tabContents.forEach(content => content.classList.remove('active'));
             
             button.classList.add('active');
-            
-            // Update active label with smooth fade transition
-            const labelEl = document.getElementById('skills-tab-label');
-            if (labelEl) {
-                let text = '';
-                if (tabId === 'creative') text = 'Creative & Design Apps';
-                else if (tabId === 'ai') text = 'AI & Automation Toolkit';
-                else if (tabId === 'capabilities') text = 'Core Capabilities';
-                
-                labelEl.style.opacity = '0';
-                setTimeout(() => {
-                    labelEl.textContent = text;
-                    labelEl.style.opacity = '1';
-                }, 150);
-            }
+            updateSkillsIndicator();
 
             const activeContent = document.getElementById(`skills-tab-${tabId}`);
             if (activeContent) {
@@ -454,6 +454,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Handle initial positions and resize shifts
+    setTimeout(updateSkillsIndicator, 150);
+    window.addEventListener('resize', updateSkillsIndicator, { passive: true });
 
     // ==========================================
     // 10. COLLAPSIBLE CONTENT (READ MORE) ON MOBILE
@@ -826,6 +830,21 @@ function initPortfolioFilter() {
         requestAnimationFrame(smoothHorizontalLoop);
     }
 
+    const portfolioTabs = document.querySelector('.portfolio-tabs');
+    const portfolioIndicator = document.querySelector('.portfolio-slider-indicator');
+
+    function updatePortfolioIndicator() {
+        if (!portfolioTabs || !portfolioIndicator) return;
+        const activeBtn = portfolioTabs.querySelector('.portfolio-tab-btn.active');
+        if (activeBtn) {
+            const navRect = portfolioTabs.getBoundingClientRect();
+            const btnRect = activeBtn.getBoundingClientRect();
+            const leftOffset = btnRect.left - navRect.left;
+            portfolioIndicator.style.transform = `translateX(${leftOffset}px)`;
+            portfolioIndicator.style.width = `${btnRect.width}px`;
+        }
+    }
+
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const filter = btn.dataset.filter;
@@ -833,19 +852,26 @@ function initPortfolioFilter() {
             btn.classList.add('active');
 
             applyFilter(filter);
+            updatePortfolioIndicator();
             setTimeout(updateTranslation, 50); // slight delay to allow layout recalculation
         });
     });
 
     window.addEventListener('scroll', updateTranslation, { passive: true });
-    window.addEventListener('resize', updateTranslation, { passive: true });
+    window.addEventListener('resize', () => {
+        updateTranslation();
+        updatePortfolioIndicator();
+    }, { passive: true });
 
     smoothHorizontalLoop();
 
     const activeBtn = document.querySelector('.portfolio-tab-btn.active');
     if (activeBtn) {
         applyFilter(activeBtn.dataset.filter);
-        setTimeout(updateTranslation, 100);
+        setTimeout(() => {
+            updatePortfolioIndicator();
+            updateTranslation();
+        }, 150);
     }
 }
 
