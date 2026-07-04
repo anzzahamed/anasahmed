@@ -247,6 +247,24 @@ document.addEventListener('DOMContentLoaded', () => {
         initCanvas(); // Set canvas size BEFORE any image loads
         window.addEventListener('resize', resizeCanvas);
 
+        // Track scroll velocity for chromatic aberration intensity
+        let lastScrollY = window.scrollY;
+        let scrollVelocity = 0;
+        let smoothVelocity = 0;
+        let caFrame = null;
+
+        function updateScrollVelocity() {
+            const currentScroll = window.scrollY;
+            scrollVelocity = currentScroll - lastScrollY;
+            lastScrollY = currentScroll;
+            // Smooth the velocity with lerp
+            smoothVelocity += (scrollVelocity - smoothVelocity) * 0.25;
+            // Decay when not scrolling
+            smoothVelocity *= 0.88;
+            caFrame = requestAnimationFrame(updateScrollVelocity);
+        }
+        updateScrollVelocity();
+
         function drawFrame(index) {
             const img = images[index];
             if (img && img.complete && img.naturalWidth > 0 && index !== lastDrawnFrame) {
@@ -257,20 +275,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let drawWidth, drawHeight, drawX, drawY;
                 if (canvasRatio > imgRatio) {
-                    // Desktop: image fills full height, placed on right
                     drawHeight = canvasHeight;
                     drawWidth = canvasHeight * imgRatio;
                     drawX = canvasWidth - drawWidth - (canvasWidth * 0.03);
                     drawY = 0;
                 } else {
-                    // Mobile: image fills full width, offset down past header
                     drawWidth = canvasWidth;
                     drawHeight = canvasWidth / imgRatio;
                     drawX = 0;
                     drawY = 75;
                 }
 
-                heroCtx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                // --- Chromatic Aberration ---
+                // Calculate offset driven by scroll velocity (capped for subtlety)
+                const abAmt = Math.min(Math.abs(smoothVelocity) * 0.28, 6);
+
+                if (abAmt < 0.4) {
+                    // Near-zero velocity: draw normally, no overhead
+                    heroCtx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                } else {
+                    // Use an offscreen canvas to isolate colour channels
+                    const off = document.createElement('canvas');
+                    off.width  = canvasWidth;
+                    off.height = canvasHeight;
+                    const offCtx = off.getContext('2d');
+                    offCtx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+
+                    // Direction: positive velocity = scrolling down → spread downward
+                    const dir = smoothVelocity > 0 ? 1 : -1;
+                    const rx = abAmt * 0.6 * dir;
+                    const ry = abAmt * dir;
+
+                    // --- RED channel (shifted right/down) ---
+                    heroCtx.save();
+                    heroCtx.globalCompositeOperation = 'source-over';
+                    heroCtx.drawImage(img, drawX + rx,  drawY + ry,  drawWidth, drawHeight);
+                    heroCtx.globalCompositeOperation = 'multiply';
+                    // Mask to red: overlay cyan (removes red from excess pixels)
+                    heroCtx.fillStyle = 'rgba(0, 255, 255, 0.45)';
+                    heroCtx.fillRect(drawX + rx, drawY + ry, drawWidth, drawHeight);
+                    heroCtx.restore();
+
+                    // --- Base image (green-biased, centred) ---
+                    heroCtx.save();
+                    heroCtx.globalCompositeOperation = 'screen';
+                    heroCtx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                    heroCtx.restore();
+
+                    // --- BLUE channel (shifted left/up) ---
+                    heroCtx.save();
+                    heroCtx.globalCompositeOperation = 'screen';
+                    // Draw image offset to opposite direction
+                    const tempC = document.createElement('canvas');
+                    tempC.width  = canvasWidth;
+                    tempC.height = canvasHeight;
+                    const tempCtx = tempC.getContext('2d');
+                    tempCtx.drawImage(img, drawX - rx, drawY - ry, drawWidth, drawHeight);
+                    // Isolate blue by multiplying with yellow
+                    tempCtx.globalCompositeOperation = 'multiply';
+                    tempCtx.fillStyle = 'rgba(255, 255, 0, 0.45)';
+                    tempCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+                    heroCtx.drawImage(tempC, 0, 0);
+                    heroCtx.restore();
+                }
+
                 lastDrawnFrame = index;
             }
         }
