@@ -873,11 +873,10 @@ header.scrolled {
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
 }
 
-/* Specifically style InsuranceMarket and Lifco Group logos with solid white backgrounds */
-.timeline-item:nth-child(1) .company-logo-wrap,
-.timeline-item:nth-child(2) .company-logo-wrap {
-    background: #ffffff;
-    border: none;
+/* Style all timeline markers with solid white backgrounds */
+.company-logo-wrap {
+    background: #ffffff !important;
+    border: none !important;
 }
 
 .timeline-item:nth-child(1) .company-logo-wrap img {
@@ -887,6 +886,17 @@ header.scrolled {
 
 .timeline-item:nth-child(2) .company-logo-wrap img {
     transform: scale(1.0);
+    object-fit: contain;
+}
+
+.timeline-item:nth-child(3) .company-logo-wrap img {
+    filter: invert(1); /* Invert white logo to black for white background visibility */
+    transform: scale(0.85);
+    object-fit: contain;
+}
+
+.timeline-item:nth-child(4) .company-logo-wrap img {
+    transform: scale(0.85);
     object-fit: contain;
 }
 
@@ -1697,7 +1707,7 @@ footer {
 
 @media (max-width: 992px) {
     #hero-scroll-canvas {
-        opacity: 0.35; /* Subtle opacity background for readability */
+        opacity: 0.65; /* Enhanced visibility on mobile to see scroll animation clearly */
         mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 88%) !important;
         -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 88%) !important;
     }
@@ -2074,7 +2084,132 @@ footer {
         padding: 30px 0 !important;
     }
     .hero-section {
-        padding: 110px 0 30px !important;
+        padding: 90px 0 30px !important;
+    }
+    .hero-content {
+        margin-top: 240px !important; /* Shift hero text down on mobile so the scroll canvas is visible above it */
+    }
+
+    /* Decent-sized buttons & tabs on mobile */
+    .btn {
+        padding: 9px 20px !important;
+        font-size: 0.82rem !important;
+        border-radius: 10px !important;
+    }
+
+    .portfolio-tab-btn {
+        padding: 7px 16px !important;
+        font-size: 0.78rem !important;
+    }
+
+    .tab-btn {
+        padding: 7px 14px !important;
+        font-size: 0.78rem !important;
+    }
+
+    /* Compact columns & layouts on mobile */
+    .timeline {
+        padding-left: 44px !important; /* Safety gap from mobile screen edge */
+    }
+    
+    .timeline::after {
+        left: 22px !important; /* Center vertical track line relative to scaled items */
+    }
+    
+    .timeline-marker-logo {
+        left: -40px !important; /* Perfectly centered on vertical line */
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    .company-logo-wrap {
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    /* Smaller compact font sizes for all mobile text elements */
+    body {
+        font-size: 0.85rem !important;
+    }
+
+    .section-title h2 {
+        font-size: 1.45rem !important;
+        letter-spacing: 0.02em;
+    }
+
+    .section-title .sub-title {
+        font-size: 0.75rem !important;
+        letter-spacing: 0.08em;
+    }
+
+    .hero-content h1 {
+        font-size: 1.55rem !important;
+        line-height: 1.2;
+    }
+    
+    .hero-lead {
+        font-size: 0.84rem !important;
+        line-height: 1.5;
+    }
+
+    .about-info h3 {
+        font-size: 1.2rem !important;
+    }
+
+    .about-info p {
+        font-size: 0.85rem !important;
+        line-height: 1.5;
+    }
+
+    .card-glass h3.card-heading-icon {
+        font-size: 1.12rem !important;
+        margin-bottom: 16px !important;
+    }
+
+    .timeline-content h3 {
+        font-size: 1.12rem !important;
+    }
+
+    .company-name {
+        font-size: 0.85rem !important;
+    }
+
+    .timeline-summary {
+        font-size: 0.84rem !important;
+        line-height: 1.5;
+    }
+
+    .timeline-details li {
+        font-size: 0.82rem !important;
+        line-height: 1.4;
+    }
+
+    .skills-tab-content h4 {
+        font-size: 1.05rem !important;
+    }
+
+    .skill-compact-card h5 {
+        font-size: 0.84rem !important;
+    }
+
+    .skill-compact-card span {
+        font-size: 0.72rem !important;
+    }
+
+    .contact-info h2 {
+        font-size: 1.4rem !important;
+    }
+
+    .contact-info p {
+        font-size: 0.85rem !important;
+    }
+
+    .contact-item h4 {
+        font-size: 0.9rem !important;
+    }
+
+    .contact-item p, .contact-item a {
+        font-size: 0.82rem !important;
     }
 }
 
