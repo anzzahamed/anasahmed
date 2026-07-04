@@ -698,19 +698,34 @@ document.addEventListener('DOMContentLoaded', () => {
 function initPortfolioFilter() {
     const filterBtns = document.querySelectorAll('.portfolio-tab-btn');
     const items = document.querySelectorAll('.portfolio-grid .portfolio-item');
+    const seeMoreBtnWrap = document.querySelector('.portfolio-more-video-btn-wrap');
+    const seeMoreBtn = document.getElementById('portfolio-see-more-btn');
+    
     if (filterBtns.length === 0) return;
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const filter = btn.dataset.filter;
-            
-            // Toggle active button class
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    let videoLimitActive = true;
 
-            // Filter items
-            items.forEach(item => {
-                if (filter === 'all' || item.dataset.category === filter) {
+    function applyFilter(filter) {
+        let visibleVideoCount = 0;
+
+        items.forEach(item => {
+            if (item.dataset.category === filter) {
+                if (filter === 'video') {
+                    if (videoLimitActive && visibleVideoCount >= 4) {
+                        item.style.display = 'none';
+                    } else {
+                        item.style.display = 'block';
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.96)';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1)';
+                            item.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+                        }, 40);
+                        visibleVideoCount++;
+                    }
+                } else {
+                    // For graphic design design tab, show everything
                     item.style.display = 'block';
                     item.style.opacity = '0';
                     item.style.transform = 'scale(0.96)';
@@ -719,12 +734,52 @@ function initPortfolioFilter() {
                         item.style.transform = 'scale(1)';
                         item.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
                     }, 40);
-                } else {
-                    item.style.display = 'none';
                 }
-            });
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        // Toggle visibility of the See More Button
+        if (seeMoreBtnWrap) {
+            if (filter === 'video') {
+                seeMoreBtnWrap.style.display = 'flex';
+                if (seeMoreBtn) {
+                    if (videoLimitActive) {
+                        seeMoreBtn.innerHTML = 'See More Video Projects <i class="fa-solid fa-chevron-down"></i>';
+                    } else {
+                        seeMoreBtn.innerHTML = 'See Less Video Projects <i class="fa-solid fa-chevron-up"></i>';
+                    }
+                }
+            } else {
+                seeMoreBtnWrap.style.display = 'none';
+            }
+        }
+    }
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+            
+            // Toggle active class on tab buttons
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            applyFilter(filter);
         });
     });
+
+    if (seeMoreBtn) {
+        seeMoreBtn.addEventListener('click', () => {
+            videoLimitActive = !videoLimitActive;
+            
+            // Re-apply filter to show/hide extra video projects
+            const activeBtn = document.querySelector('.portfolio-tab-btn.active');
+            if (activeBtn) {
+                applyFilter(activeBtn.dataset.filter);
+            }
+        });
+    }
 
     // Make sure initial active state triggers
     const activeBtn = document.querySelector('.portfolio-tab-btn.active');
