@@ -838,7 +838,7 @@ header.scrolled {
     z-index: 12 !important; /* Forces it to sit strictly above vertical line */
     background: #ffffff !important; /* Solid white background covering the line track */
     border: 2px solid var(--border-glass) !important;
-    border-radius: 50% !important; /* Beautiful circular framing mask */
+    border-radius: 8px !important; /* Premium rounded rectangle shape */
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -849,7 +849,7 @@ header.scrolled {
 .company-logo-wrap {
     width: 32px;
     height: 32px;
-    border-radius: 50%;
+    border-radius: 6px; /* Matching rounded corners inside */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1723,18 +1723,57 @@ footer {
     gap: 6px;
 }
 
-@keyframes circleCollapse {
+@keyframes circleExpandReveal {
     0% {
-        clip-path: circle(100% at 50% 50%);
+        -webkit-mask-image: radial-gradient(circle, transparent 0%, black 0%);
+        mask-image: radial-gradient(circle, transparent 0%, black 0%);
         opacity: 1;
     }
-    60% {
+    10% {
         opacity: 1;
     }
     100% {
-        clip-path: circle(0% at 50% 50%);
+        -webkit-mask-image: radial-gradient(circle, transparent 150%, black 150%);
+        mask-image: radial-gradient(circle, transparent 150%, black 150%);
         opacity: 0;
         visibility: hidden;
+    }
+}
+
+/* Ripple expanding animation */
+.loader-ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    margin-left: -50px;
+    margin-top: -50px;
+    border: 2px solid var(--accent-blue);
+    border-radius: 50%;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+#intro-loader.fade-out .loader-ripple {
+    animation: rippleExpand 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes rippleExpand {
+    0% {
+        transform: scale(0);
+        opacity: 0.8;
+        border-color: var(--accent-blue);
+    }
+    50% {
+        opacity: 0.5;
+        border-color: var(--accent-purple);
+    }
+    100% {
+        transform: scale(16);
+        opacity: 0;
     }
 }
 
@@ -2272,11 +2311,13 @@ footer {
         width: 34px !important;
         height: 34px !important;
         z-index: 5 !important; /* Overlaps vertical connector line */
+        border-radius: 8px !important; /* Reverted to premium rounded rectangle shape */
     }
 
     .company-logo-wrap {
         width: 34px !important;
         height: 34px !important;
+        border-radius: 6px !important; /* Premium rounded rectangle shape */
         background: #fff !important; /* Clear overlap background block */
     }
 
@@ -2413,7 +2454,7 @@ footer {
     }
 
     .skills-tab-content h4 {
-        font-size: 1.05rem !important;
+        font-size: 0.54rem !important; /* Shrunk text under icons to fit mobile grid */
     }
 
     .skill-compact-card h5 {
@@ -2687,7 +2728,7 @@ body.vmodal-open {
 }
 
 #intro-loader.fade-out {
-    animation: circleCollapse 1.3s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+    animation: circleExpandReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     pointer-events: none;
 }
 
