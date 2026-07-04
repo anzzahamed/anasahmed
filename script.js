@@ -342,37 +342,55 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
-        function updateTargetFrame() {
-            if (!imagesLoaded) return;
+        let targetScrollTop = 0;
+        let currentScrollTop = 0;
 
-            const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
-            const heroHeight = heroSection?.offsetHeight || 0;
-            const aboutHeight = aboutSection?.offsetHeight || 0;
-            const expHeight = experienceSection?.offsetHeight || 0;
-            
-            const maxScroll = heroHeight + aboutHeight + expHeight;
-            
-            // Map scroll within the 3 sections directly to animation frames, bypassing the initial camera zoom stretch frames
-            const fraction = Math.min(1, Math.max(0, scrollTop / maxScroll));
-            const startFrame = 20;
-            const targetFrame = startFrame + Math.round(fraction * (totalFrames - 1 - startFrame));
-            
-            // Render frame instantly for zero lag responsiveness
-            drawFrame(targetFrame);
-            
-            // Smoothly fade out canvas as we scroll past the Experience section
-            const fadeStart = maxScroll - 200; // start fading slightly before the section ends
-            const fadeEnd = maxScroll + 200;
-            
-            if (scrollTop > fadeStart) {
-                const fadeProgress = Math.min(1, (scrollTop - fadeStart) / (fadeEnd - fadeStart));
-                heroCanvas.style.opacity = (0.8 * (1 - fadeProgress)).toString();
-                heroCanvas.style.visibility = fadeProgress === 1 ? 'hidden' : 'visible';
-            } else {
-                heroCanvas.style.opacity = '0.8';
-                heroCanvas.style.visibility = 'visible';
-            }
+        function updateTargetFrame() {
+            targetScrollTop = window.scrollY || document.documentElement.scrollTop || 0;
         }
+
+        function smoothScrollLoop() {
+            // Buttery smooth ease-out inertia calculation
+            const diff = targetScrollTop - currentScrollTop;
+            if (Math.abs(diff) > 0.08) {
+                currentScrollTop += diff * 0.09;
+            } else {
+                currentScrollTop = targetScrollTop;
+            }
+
+            if (imagesLoaded) {
+                const heroHeight = heroSection?.offsetHeight || 0;
+                const aboutHeight = aboutSection?.offsetHeight || 0;
+                const expHeight = experienceSection?.offsetHeight || 0;
+                
+                const maxScroll = heroHeight + aboutHeight + expHeight;
+                
+                // Map the smooth scroll offset to frame indices
+                const fraction = Math.min(1, Math.max(0, currentScrollTop / maxScroll));
+                const startFrame = 20;
+                const targetFrame = startFrame + Math.round(fraction * (totalFrames - 1 - startFrame));
+                
+                drawFrame(targetFrame);
+                
+                // Fade canvas out smoothly near the end of the timeline
+                const fadeStart = maxScroll - 200;
+                const fadeEnd = maxScroll + 200;
+                
+                if (currentScrollTop > fadeStart) {
+                    const fadeProgress = Math.min(1, (currentScrollTop - fadeStart) / (fadeEnd - fadeStart));
+                    heroCanvas.style.opacity = (0.8 * (1 - fadeProgress)).toString();
+                    heroCanvas.style.visibility = fadeProgress === 1 ? 'hidden' : 'visible';
+                } else {
+                    heroCanvas.style.opacity = '0.8';
+                    heroCanvas.style.visibility = 'visible';
+                }
+            }
+
+            requestAnimationFrame(smoothScrollLoop);
+        }
+
+        // Start the smooth drawing animation loop
+        smoothScrollLoop();
 
         window.addEventListener('scroll', updateTargetFrame, { passive: true });
         
@@ -787,3 +805,19 @@ function initPortfolioFilter() {
         activeBtn.click();
     }
 }
+
+// ==========================================
+// 15. INTRO LOADER LIFECYCLE
+// ==========================================
+window.addEventListener('load', () => {
+    const loader = document.getElementById('intro-loader');
+    if (loader) {
+        // Lock body scrolling temporarily while loading
+        document.body.classList.add('overflow-hidden');
+        
+        setTimeout(() => {
+            loader.classList.add('fade-out');
+            document.body.classList.remove('overflow-hidden');
+        }, 1300); // 1.3s duration matches progress animation perfectly
+    }
+});
