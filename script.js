@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     const header = document.getElementById('header');
     const progressBar = document.getElementById('scroll-progress');
+    const whatsappBtn = document.getElementById('whatsapp-fab');
+    const heroSection = document.getElementById('hero');
     
     window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
@@ -20,6 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (totalScroll > 0) {
             const scrolledPercentage = (scrollY / totalScroll) * 100;
             progressBar.style.width = scrolledPercentage + '%';
+        }
+
+        // WhatsApp FAB visibility toggle (fade in/out after hero page)
+        if (whatsappBtn && heroSection) {
+            const heroHeight = heroSection.offsetHeight;
+            if (scrollY >= heroHeight - 80) {
+                whatsappBtn.classList.add('visible');
+            } else {
+                whatsappBtn.classList.remove('visible');
+            }
         }
     });
 
@@ -351,6 +363,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const activeContent = document.getElementById(`skills-tab-${tabId}`);
             if (activeContent) {
                 activeContent.classList.add('active');
+                
+                // Trigger layout recalibration on active grid
+                const grid = activeContent.querySelector('.skills-compact-grid');
+                if (grid && typeof grid._updateRows === 'function') {
+                    grid._updateRows();
+                }
             }
         });
     });
@@ -424,4 +442,219 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeVideoModal();
     });
+
+    // ==========================================
+    // 12. DYNAMIC SKILLS SEE MORE / SHOW LESS
+    // ==========================================
+    function initSkillsSeeMore() {
+        const tabs = ['creative', 'ai', 'capabilities'];
+        
+        tabs.forEach(tabId => {
+            const tabContent = document.getElementById(`skills-tab-${tabId}`);
+            if (!tabContent) return;
+            
+            const grid = tabContent.querySelector('.skills-compact-grid');
+            if (!grid) return;
+            
+            const cards = grid.querySelectorAll('.skill-compact-card');
+            if (cards.length === 0) return;
+            
+            // Create See More button wrap
+            const btnWrap = document.createElement('div');
+            btnWrap.className = 'skills-see-more-wrap';
+            btnWrap.style.display = 'none';
+            
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-secondary skills-see-more-btn';
+            btn.innerHTML = `See More <i class="fa-solid fa-chevron-down"></i>`;
+            btnWrap.appendChild(btn);
+            tabContent.appendChild(btnWrap);
+            
+            let isExpanded = false;
+            
+            const updateRows = () => {
+                // Reset card display classes
+                cards.forEach(c => c.classList.remove('hidden-row'));
+                
+                if (isExpanded) {
+                    btn.innerHTML = `See Less <i class="fa-solid fa-chevron-up"></i>`;
+                    btnWrap.style.display = 'flex';
+                    return;
+                }
+                
+                // Get unique offsetTops to determine row positions
+                const offsets = Array.from(cards).map(c => c.offsetTop);
+                const uniqueOffsets = [...new Set(offsets)].sort((a, b) => a - b);
+                
+                if (uniqueOffsets.length > 2) {
+                    btnWrap.style.display = 'flex';
+                    btn.innerHTML = `See More <i class="fa-solid fa-chevron-down"></i>`;
+                    
+                    const thirdRowOffset = uniqueOffsets[2];
+                    cards.forEach(c => {
+                        if (c.offsetTop >= thirdRowOffset) {
+                            c.classList.add('hidden-row');
+                        }
+                    });
+                } else {
+                    btnWrap.style.display = 'none';
+                }
+            };
+            
+            btn.addEventListener('click', () => {
+                isExpanded = !isExpanded;
+                updateRows();
+                
+                // Scroll smoothly to the skills section title if collapsing
+                if (!isExpanded) {
+                    tabContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+            
+            // Store update function on grid element to access it externally
+            grid._updateRows = updateRows;
+            
+            // Run update layout
+            if (tabContent.classList.contains('active')) {
+                setTimeout(updateRows, 50);
+            }
+            
+            // Debounced resize handler
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(updateRows, 100);
+            });
+        });
+    }
+    
+    // ==========================================
+    // 13. MINIMAL & LUXURY PARTICLES BACKGROUND
+    // ==========================================
+    function initParticles() {
+        const canvas = document.getElementById('particles-bg-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null };
+        const maxParticles = 55; // Minimal count for luxury feel
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.1 + 0.6; // Small minimal dots
+                this.speedX = (Math.random() - 0.5) * 0.15; // Slow drift
+                this.speedY = (Math.random() - 0.5) * 0.15;
+                this.color = `rgba(168, 85, 247, ${Math.random() * 0.15 + 0.08})`; // Soft purple
+                if (Math.random() > 0.5) {
+                    this.color = `rgba(0, 210, 255, ${Math.random() * 0.15 + 0.08})`; // Soft blue
+                }
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+
+                if (mouse.x !== null && mouse.y !== null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    let maxDistance = 110;
+                    if (distance < maxDistance) {
+                        let forceDirectionX = dx / distance;
+                        let forceDirectionY = dy / distance;
+                        let force = (maxDistance - distance) / maxDistance;
+                        this.x -= forceDirectionX * force * 1.6;
+                        this.y -= forceDirectionY * force * 1.6;
+                    }
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < maxParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+
+    initSkillsSeeMore();
+    initParticles();
+    initPortfolioFilter();
 });
+
+// ==========================================
+// 14. PORTFOLIO FILTER TABS
+// ==========================================
+function initPortfolioFilter() {
+    const filterBtns = document.querySelectorAll('.portfolio-tab-btn');
+    const items = document.querySelectorAll('.portfolio-grid .portfolio-item');
+    if (filterBtns.length === 0) return;
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+            
+            // Toggle active button class
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Filter items
+            items.forEach(item => {
+                if (filter === 'all' || item.dataset.category === filter) {
+                    item.style.display = 'block';
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.96)';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                        item.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+                    }, 40);
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Make sure initial active state triggers
+    const activeBtn = document.querySelector('.portfolio-tab-btn.active');
+    if (activeBtn) {
+        activeBtn.click();
+    }
+}
