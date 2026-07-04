@@ -440,6 +440,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isExpanded = targetEl.classList.toggle('expanded');
                 toggle.classList.toggle('expanded');
                 
+                // Toggle details-expanded state on the parent container card
+                const parentCard = toggle.closest('.timeline-content') || toggle.closest('.about-info') || toggle.closest('.edu-card');
+                if (parentCard) {
+                    parentCard.classList.toggle('details-expanded', isExpanded);
+                }
+                
                 // Toggle text content
                 const hasDetails = toggle.innerText.toLowerCase().includes('details');
                 const actionText = isExpanded ? (hasDetails ? 'Hide Details' : 'Read Less') : (hasDetails ? 'Read Details' : 'Read More');
@@ -587,6 +593,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function initParticles() {
         const canvas = document.getElementById('particles-bg-canvas');
         if (!canvas) return;
+        
+        // Hide particles completely on mobile screens
+        if (window.innerWidth < 768) {
+            canvas.style.display = 'none';
+            return;
+        }
+        
         const ctx = canvas.getContext('2d');
         let particles = [];
         let mouse = { x: null, y: null };

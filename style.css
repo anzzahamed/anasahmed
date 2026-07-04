@@ -429,9 +429,9 @@ header.scrolled {
     opacity: 0.95; /* High premium visibility */
     transition: opacity 0.4s ease, visibility 0.4s ease;
     
-    /* Soft vignette mask at the screen edges, keeping the center/right solid */
-    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
-    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+    /* Center radial mask on the model subject on the right, fully feathering the top-left and edges to 0 */
+    mask-image: radial-gradient(circle at 65% 50%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.8) 45%, rgba(0,0,0,0) 78%) !important;
+    -webkit-mask-image: radial-gradient(circle at 65% 50%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.8) 45%, rgba(0,0,0,0) 78%) !important;
 }
 
 
@@ -1673,6 +1673,22 @@ footer {
     transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 
+@media (min-width: 769px) {
+    /* Always expand Creative Visionary and Languages on desktop */
+    .about-info .collapsible-mobile,
+    .lang-grid .collapsible-mobile {
+        max-height: none !important;
+        opacity: 1 !important;
+        overflow: visible !important;
+    }
+    
+    /* Hide expand/collapse toggles for these sections on desktop */
+    .about-info .read-more-toggle,
+    .lang-grid .read-more-toggle {
+        display: none !important;
+    }
+}
+
 .collapsible-mobile.expanded {
     max-height: 1000px;
     opacity: 1;
@@ -1708,8 +1724,8 @@ footer {
 @media (max-width: 992px) {
     #hero-scroll-canvas {
         opacity: 0.65; /* Enhanced visibility on mobile to see scroll animation clearly */
-        mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 88%) !important;
-        -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 88%) !important;
+        mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 70%) !important;
+        -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 70%) !important;
     }
 
     .hero-grid {
@@ -2127,6 +2143,53 @@ footer {
         height: 34px !important;
     }
 
+    /* Collapse experience summaries by default on mobile */
+    .timeline-content .timeline-summary {
+        display: none !important;
+    }
+
+    .timeline-content.details-expanded .timeline-summary {
+        display: block !important;
+        animation: fadeIn 0.3s ease forwards;
+    }
+
+    /* 2x2 Google Drive and Behance Promo Grid on Mobile */
+    .portfolio-external-promo {
+        grid-template-columns: 1fr 1fr !important; /* Force side-by-side grid */
+        gap: 12px !important;
+        margin-bottom: 24px !important;
+    }
+
+    .promo-card {
+        flex-direction: column !important; /* Stack card children vertically */
+        align-items: center !important;
+        text-align: center !important;
+        padding: 16px 10px !important;
+        gap: 8px !important;
+    }
+
+    .promo-icon {
+        font-size: 1.8rem !important; /* Scale down folder/behance icons */
+    }
+
+    .promo-text h3 {
+        font-size: 0.82rem !important; /* Small clean titles */
+        margin-bottom: 0 !important;
+    }
+
+    .promo-text p {
+        display: none !important; /* Avoid descriptions completely as requested */
+    }
+
+    .promo-card .btn {
+        padding: 6px 8px !important;
+        font-size: 0.7rem !important;
+        border-radius: 6px !important;
+        margin-top: 4px !important;
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
     /* Smaller compact font sizes for all mobile text elements */
     body {
         font-size: 0.85rem !important;
@@ -2172,11 +2235,6 @@ footer {
 
     .company-name {
         font-size: 0.85rem !important;
-    }
-
-    .timeline-summary {
-        font-size: 0.84rem !important;
-        line-height: 1.5;
     }
 
     .timeline-details li {
