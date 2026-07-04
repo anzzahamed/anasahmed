@@ -729,93 +729,94 @@ document.addEventListener('DOMContentLoaded', () => {
 function initPortfolioFilter() {
     const filterBtns = document.querySelectorAll('.portfolio-tab-btn');
     const items = document.querySelectorAll('.portfolio-grid .portfolio-item');
-    const seeMoreBtnWrap = document.querySelector('.portfolio-more-video-btn-wrap');
-    const seeMoreBtn = document.getElementById('portfolio-see-more-btn');
+    const stickyWrap = document.getElementById('portfolio-sticky-wrap');
+    const grid = document.querySelector('.portfolio-grid');
     
     if (filterBtns.length === 0) return;
 
-    let videoLimitActive = true;
+    let activeFilter = 'video';
+    let targetX = 0;
+    let currentX = 0;
 
     function applyFilter(filter) {
-        let visibleVideoCount = 0;
+        activeFilter = filter;
 
         items.forEach(item => {
             if (item.dataset.category === filter) {
-                if (filter === 'video') {
-                    if (videoLimitActive && visibleVideoCount >= 4) {
-                        item.style.display = 'none';
-                    } else {
-                        item.style.display = 'block';
-                        item.style.opacity = '0';
-                        item.style.transform = 'scale(0.96)';
-                        setTimeout(() => {
-                            item.style.opacity = '1';
-                            item.style.transform = 'scale(1)';
-                            item.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
-                        }, 40);
-                        visibleVideoCount++;
-                    }
-                } else {
-                    // For graphic design design tab, show everything
-                    item.style.display = 'block';
-                    item.style.opacity = '0';
-                    item.style.transform = 'scale(0.96)';
-                    setTimeout(() => {
-                        item.style.opacity = '1';
-                        item.style.transform = 'scale(1)';
-                        item.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
-                    }, 40);
-                }
+                item.style.display = 'block';
+                item.style.opacity = '1';
+                item.style.transform = 'scale(1)';
             } else {
                 item.style.display = 'none';
             }
         });
 
-        // Toggle visibility of the See More Button
-        if (seeMoreBtnWrap) {
+        if (stickyWrap) {
             if (filter === 'video') {
-                seeMoreBtnWrap.style.display = 'flex';
-                if (seeMoreBtn) {
-                    if (videoLimitActive) {
-                        seeMoreBtn.innerHTML = 'See More Video Projects <i class="fa-solid fa-chevron-down"></i>';
-                    } else {
-                        seeMoreBtn.innerHTML = 'See Less Video Projects <i class="fa-solid fa-chevron-up"></i>';
-                    }
-                }
+                stickyWrap.classList.remove('disable-horizontal-scroll');
             } else {
-                seeMoreBtnWrap.style.display = 'none';
+                stickyWrap.classList.add('disable-horizontal-scroll');
+                if (grid) {
+                    grid.style.transform = 'none';
+                }
+                targetX = 0;
+                currentX = 0;
             }
         }
+    }
+
+    function updateTranslation() {
+        if (!stickyWrap || !grid || activeFilter !== 'video') return;
+
+        const rect = stickyWrap.getBoundingClientRect();
+        const wrapHeight = rect.height;
+        const viewportHeight = window.innerHeight;
+
+        const startY = 80;
+        const endY = -(wrapHeight - viewportHeight);
+        
+        const progress = Math.min(1, Math.max(0, (startY - rect.top) / (startY - endY)));
+
+        const gridWidth = grid.scrollWidth;
+        const containerWidth = stickyWrap.offsetWidth;
+        const maxTranslateX = Math.max(0, gridWidth - containerWidth + 60);
+
+        targetX = -progress * maxTranslateX;
+    }
+
+    function smoothHorizontalLoop() {
+        if (activeFilter === 'video' && grid && stickyWrap && !stickyWrap.classList.contains('disable-horizontal-scroll')) {
+            const diffX = targetX - currentX;
+            if (Math.abs(diffX) > 0.08) {
+                currentX += diffX * 0.09;
+            } else {
+                currentX = targetX;
+            }
+            grid.style.transform = `translateX(${currentX}px)`;
+        }
+        requestAnimationFrame(smoothHorizontalLoop);
     }
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const filter = btn.dataset.filter;
-            
-            // Toggle active class on tab buttons
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
             applyFilter(filter);
+            setTimeout(updateTranslation, 50); // slight delay to allow layout recalculation
         });
     });
 
-    if (seeMoreBtn) {
-        seeMoreBtn.addEventListener('click', () => {
-            videoLimitActive = !videoLimitActive;
-            
-            // Re-apply filter to show/hide extra video projects
-            const activeBtn = document.querySelector('.portfolio-tab-btn.active');
-            if (activeBtn) {
-                applyFilter(activeBtn.dataset.filter);
-            }
-        });
-    }
+    window.addEventListener('scroll', updateTranslation, { passive: true });
+    window.addEventListener('resize', updateTranslation, { passive: true });
 
-    // Make sure initial active state triggers
+    smoothHorizontalLoop();
+
     const activeBtn = document.querySelector('.portfolio-tab-btn.active');
     if (activeBtn) {
-        activeBtn.click();
+        applyFilter(activeBtn.dataset.filter);
+        setTimeout(updateTranslation, 100);
     }
 }
 
