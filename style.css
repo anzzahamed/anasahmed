@@ -2229,7 +2229,6 @@ footer {
         justify-content: center !important;
     }
 
-    /* Mobile horizontal scrolling for video grid */
     .portfolio-horizontal-scroll-wrap:not(.disable-horizontal-scroll) .portfolio-grid {
         display: flex !important;
         flex-direction: row !important;
@@ -2245,8 +2244,16 @@ footer {
         flex-shrink: 0 !important;
     }
 
+    .portfolio-sticky-container {
+        position: sticky !important;
+        top: 90px !important;
+        height: 240px !important; /* Match 16:9 mobile video heights to remove empty voids */
+        display: flex !important;
+        align-items: center !important;
+    }
+
     .portfolio-horizontal-scroll-wrap:not(.disable-horizontal-scroll) {
-        height: 190vh !important;
+        height: 140vh !important; /* Tight scroll distance */
     }
 
     /* Smaller compact font sizes for all mobile text elements */
@@ -2267,6 +2274,12 @@ footer {
     .hero-content h1 {
         font-size: 1.55rem !important;
         line-height: 1.2;
+    }
+
+    .hero-availability {
+        font-size: 0.6rem !important; /* Compact minimal size for phone views */
+        letter-spacing: 0.12em !important;
+        margin-bottom: 16px !important;
     }
     
     .hero-lead {
