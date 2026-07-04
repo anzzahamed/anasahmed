@@ -253,7 +253,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-purple {
-    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%) !important;
+    background: var(--grad-primary) !important;
     box-shadow: 0 10px 25px rgba(168, 85, 247, 0.25), inset 0 1px 0 rgba(255,255,255,0.25) !important;
 }
 
@@ -726,8 +726,8 @@ header.scrolled {
 }
 
 .edu-card .meta-item {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
     border-bottom: 1px solid var(--border-glass);
 }
 
@@ -910,8 +910,9 @@ header.scrolled {
 
 .timeline-location-row {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 12px;
     width: 100%;
     margin-top: 6px;
 }
@@ -919,12 +920,11 @@ header.scrolled {
 .timeline-date {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--accent-blue);
-    text-transform: uppercase;
-    margin-bottom: 12px;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 0;
 }
 
 .timeline-content h3 {
@@ -1655,13 +1655,40 @@ footer {
     }
 }
 
-/* Collapsible Mobile Content & Read More Toggles */
+/* Collapsible Content & Read More Toggles (Universal) */
 .collapsible-mobile {
-    display: block; /* Visible by default on desktop */
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.collapsible-mobile.expanded {
+    max-height: 1000px;
+    opacity: 1;
 }
 
 .read-more-toggle {
-    display: none; /* Hidden by default on desktop */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent-blue);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: var(--transition-fast);
+}
+
+.read-more-toggle:hover {
+    color: #fff;
+}
+
+.lang-grid .collapsible-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
 }
 
 /* ==========================================
@@ -1836,25 +1863,12 @@ footer {
     .card-glass {
         padding: 20px !important;
     }
-
-    /* Collapsible Mobile Content & Read More Toggles */
-    .collapsible-mobile {
-        max-height: 0;
-        opacity: 0;
-        overflow: hidden;
-        transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-    }
-
-    .collapsible-mobile.expanded {
-        max-height: 1000px; /* Safe large value for expansion height */
-        opacity: 1;
-    }
-
+    /* Collapsible content universal layout is active */
     .read-more-toggle {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        color: #00d2ff;
+        color: var(--accent-blue);
         font-weight: 600;
         font-size: 0.82rem;
         cursor: pointer;
@@ -1906,13 +1920,7 @@ footer {
         font-size: 0.95rem;
     }
 
-    /* Languages card mobile flex spacing helper */
-    .lang-grid .collapsible-mobile {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        width: 100%;
-    }
+    /* Languages card spacing is now universal */
 
     /* Experience section (Shorter Version overrides) */
     .timeline-summary {
@@ -2316,10 +2324,20 @@ body.vmodal-open {
 }
 
 .portfolio-tab-btn.active {
-    background: var(--accent-blue);
+    background: var(--grad-primary);
     color: #fff;
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 15px rgba(0, 210, 255, 0.25);
+    border-color: transparent;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
+}
+
+/* Blur dummy graphic design mockups as requested by user */
+.portfolio-item[data-category="graphic"] .portfolio-thumb img {
+    filter: blur(10px) brightness(0.7);
+    transition: filter 0.3s ease;
+}
+
+.portfolio-item[data-category="graphic"]:hover .portfolio-thumb img {
+    filter: blur(4px) brightness(0.85);
 }
 
 .portfolio-item a {

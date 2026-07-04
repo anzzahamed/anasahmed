@@ -24,10 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
             progressBar.style.width = scrolledPercentage + '%';
         }
 
-        // WhatsApp FAB visibility toggle (fade in/out after hero page)
-        if (whatsappBtn && heroSection) {
-            const heroHeight = heroSection.offsetHeight;
-            if (scrollY >= heroHeight - 80) {
+        // WhatsApp FAB visibility toggle (visible exactly when entering the About Anas section)
+        const aboutSection = document.getElementById('about');
+        if (whatsappBtn && aboutSection) {
+            const aboutTop = aboutSection.offsetTop;
+            if (scrollY >= aboutTop - 150) {
                 whatsappBtn.classList.add('visible');
             } else {
                 whatsappBtn.classList.remove('visible');
@@ -287,13 +288,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 heroCanvas.style.opacity = '0.8';
                 heroCanvas.style.visibility = 'visible';
 
-                // Background-load all remaining frames after first is shown
-                for (let i = 0; i < totalFrames; i++) {
-                    if (i === startFrame) continue;
-                    images[i].src = framePaths[i];
-                    images[i].onload  = () => { loadedCount++; };
-                    images[i].onerror = () => { loadedCount++; };
-                }
+                // Deferred loading of remaining frames to boost initial page speed
+                let preloadStarted = false;
+                const startPreloadRemaining = () => {
+                    if (preloadStarted) return;
+                    preloadStarted = true;
+                    for (let i = 0; i < totalFrames; i++) {
+                        if (i === startFrame) continue;
+                        images[i].src = framePaths[i];
+                        images[i].onload  = () => { loadedCount++; };
+                        images[i].onerror = () => { loadedCount++; };
+                    }
+                };
+
+                // Trigger loading after 1.5s delay OR immediately on first user scroll
+                const deferTimer = setTimeout(startPreloadRemaining, 1500);
+                window.addEventListener('scroll', () => {
+                    clearTimeout(deferTimer);
+                    startPreloadRemaining();
+                }, { once: true, passive: true });
             };
 
             firstImg.onerror = () => {
