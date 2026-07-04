@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('reveal-active');
-                if (entry.target.id === 'skills') {
+                if (entry.target.id === 'skills' || entry.target.closest('#skills')) {
                     animateSkillBars();
                 }
                 observer.unobserve(entry.target);
@@ -218,6 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const experienceSection = document.getElementById('experience');
 
         const totalFrames = 239;
+        const startFrame = 20; // Skip initial camera zoom-in frames (global scope)
         const images = [];
         for (let i = 0; i < totalFrames; i++) {
             images.push(new Image());
@@ -305,8 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function preload() {
-            const startFrame = 20; // Skip initial camera zoom-in frames
-
             // Load the start frame FIRST so it displays immediately
             const firstImg = images[startFrame];
             firstImg.src = framePaths[startFrame];
@@ -427,6 +426,22 @@ document.addEventListener('DOMContentLoaded', () => {
             tabContents.forEach(content => content.classList.remove('active'));
             
             button.classList.add('active');
+            
+            // Update active label with smooth fade transition
+            const labelEl = document.getElementById('skills-tab-label');
+            if (labelEl) {
+                let text = '';
+                if (tabId === 'creative') text = 'Creative & Design Apps';
+                else if (tabId === 'ai') text = 'AI & Automation Toolkit';
+                else if (tabId === 'capabilities') text = 'Core Capabilities';
+                
+                labelEl.style.opacity = '0';
+                setTimeout(() => {
+                    labelEl.textContent = text;
+                    labelEl.style.opacity = '1';
+                }, 150);
+            }
+
             const activeContent = document.getElementById(`skills-tab-${tabId}`);
             if (activeContent) {
                 activeContent.classList.add('active');
