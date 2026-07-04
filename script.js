@@ -161,7 +161,25 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
             submitBtn.innerHTML = 'Sending... <i class="fa-solid fa-spinner fa-spin"></i>';
 
-            setTimeout(() => {
+            // Google Form Response endpoint
+            const googleFormUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLScM7tpfeBjfM4NLmbLHfNsZ9OQMLPEvvB2cLIObrWWQjU262Q/formResponse";
+            
+            const formData = new URLSearchParams();
+            formData.append('entry.1451078961', nameVal);
+            formData.append('entry.1433838400', emailVal);
+            // Combine Subject and Message since Google Form has Name, Email, Message
+            const combinedMessage = `Subject: ${subjectVal}\n\nMessage:\n${messageVal}`;
+            formData.append('entry.59278504', combinedMessage);
+
+            fetch(googleFormUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            })
+            .then(() => {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
                 
@@ -172,7 +190,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     formFeedback.classList.remove('success', 'error');
                     formFeedback.style.display = 'none';
                 }, 5000);
-            }, 1800);
+            })
+            .catch((error) => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                showFeedback('Oops! Something went wrong. Please try again.', 'error');
+                console.error('Submission error:', error);
+            });
         });
     }
 
