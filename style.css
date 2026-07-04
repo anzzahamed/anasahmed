@@ -816,11 +816,13 @@ header.scrolled {
     left: 20px; /* Centered with new padding */
     width: 2px;
     background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple), transparent);
+    z-index: 1 !important; /* Rendered below content items */
 }
 
 .timeline-item {
     position: relative;
     margin-bottom: 48px;
+    z-index: 5 !important; /* Rendered above connector line */
 }
 
 .timeline-item:last-child {
@@ -834,14 +836,14 @@ header.scrolled {
     width: 44px;
     height: 44px;
     z-index: 12 !important; /* Forces it to sit strictly above vertical line */
-    background: #040407 !important; /* Solid dark background matching page body */
+    background: #ffffff !important; /* Solid white background covering the line track */
     border: 2px solid var(--border-glass) !important;
     border-radius: 50% !important; /* Beautiful circular framing mask */
     display: flex !important;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
 }
 
 .company-logo-wrap {
@@ -991,14 +993,16 @@ header.scrolled {
 /* Skills & Portfolio Sliding Indicator Tabs styling */
 .skills-tab-nav, .portfolio-tabs {
     position: relative;
-    display: inline-flex;
+    display: flex !important; /* Centered block layout container */
+    justify-content: center;
+    align-items: center;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-glass);
     border-radius: 30px;
     padding: 4px;
     gap: 0;
     width: max-content;
-    margin: 0 auto 36px;
+    margin: 0 auto 36px !important; /* Centered block margin */
     backdrop-filter: blur(10px);
 }
 
@@ -2104,7 +2108,7 @@ footer {
     }
 
     .skill-details h4 {
-        font-size: 0.62rem !important; /* Very tiny text below icon */
+        font-size: 0.54rem !important; /* Shrunk text below icon to be tiny */
         color: var(--text-secondary);
         margin: 0;
         font-weight: 500;
@@ -2248,8 +2252,8 @@ footer {
 
     .tab-btn, .portfolio-tab-btn {
         flex-shrink: 0 !important; /* Prevent tab buttons from wrapping or shrinking */
-        padding: 8px 16px !important;
-        font-size: 0.78rem !important;
+        padding: 6px 12px !important; /* Reduced padding for mobile fits */
+        font-size: 0.74rem !important; /* Shrunk tab text size */
     }
 
     /* Compact columns & layouts on mobile */
