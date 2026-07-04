@@ -873,14 +873,20 @@ header.scrolled {
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
 }
 
-/* Specifically zoom and crop InsuranceMarket logo to fit properly inside the timeline node wrapper */
-.timeline-item:nth-child(1) .company-logo-wrap {
+/* Specifically style InsuranceMarket and Lifco Group logos with solid white backgrounds */
+.timeline-item:nth-child(1) .company-logo-wrap,
+.timeline-item:nth-child(2) .company-logo-wrap {
     background: #ffffff;
     border: none;
 }
 
 .timeline-item:nth-child(1) .company-logo-wrap img {
     transform: scale(1.05); /* Zoom adjusted to fit logo properly */
+    object-fit: contain;
+}
+
+.timeline-item:nth-child(2) .company-logo-wrap img {
+    transform: scale(1.0);
     object-fit: contain;
 }
 

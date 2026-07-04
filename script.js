@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const ctx = canvas.getContext('2d');
         let particles = [];
         let mouse = { x: null, y: null };
-        const maxParticles = 55; // Minimal count for luxury feel
+        const maxParticles = 75; // Balanced for desktop and mobile performance
 
         function resize() {
             canvas.width = window.innerWidth;
@@ -559,34 +559,33 @@ document.addEventListener('DOMContentLoaded', () => {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.1 + 0.6; // Small minimal dots
-                this.speedX = (Math.random() - 0.5) * 0.15; // Slow drift
-                this.speedY = (Math.random() - 0.5) * 0.15;
-                this.color = `rgba(168, 85, 247, ${Math.random() * 0.15 + 0.08})`; // Soft purple
-                if (Math.random() > 0.5) {
-                    this.color = `rgba(0, 210, 255, ${Math.random() * 0.15 + 0.08})`; // Soft blue
-                }
+                this.size = Math.random() * 1.3 + 0.7; // Very small, delicate dots
+                this.baseSpeedX = (Math.random() - 0.5) * 0.22; // Slow, luxurious drift
+                this.baseSpeedY = (Math.random() - 0.5) * 0.22;
+                this.speedX = this.baseSpeedX;
+                this.speedY = this.baseSpeedY;
+                // Soft blue & purple colors
+                this.color = Math.random() > 0.5 ? 'rgba(168, 85, 247, 0.35)' : 'rgba(0, 210, 255, 0.35)';
             }
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
 
-                if (this.x < 0) this.x = canvas.width;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.y < 0) this.y = canvas.height;
-                if (this.y > canvas.height) this.y = 0;
+                // Bounce off canvas edges
+                if (this.x < 0 || this.x > canvas.width) this.speedX = -this.speedX;
+                if (this.y < 0 || this.y > canvas.height) this.speedY = -this.speedY;
 
+                // Gentle interactive mouse repulsion
                 if (mouse.x !== null && mouse.y !== null) {
                     let dx = mouse.x - this.x;
                     let dy = mouse.y - this.y;
                     let distance = Math.sqrt(dx * dx + dy * dy);
-                    let maxDistance = 110;
+                    let maxDistance = 120;
                     if (distance < maxDistance) {
-                        let forceDirectionX = dx / distance;
-                        let forceDirectionY = dy / distance;
                         let force = (maxDistance - distance) / maxDistance;
-                        this.x -= forceDirectionX * force * 1.6;
-                        this.y -= forceDirectionY * force * 1.6;
+                        // Move particles away from the mouse cursor
+                        this.x -= (dx / distance) * force * 0.7;
+                        this.y -= (dy / distance) * force * 0.7;
                     }
                 }
             }
@@ -598,8 +597,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Initialize particles
         for (let i = 0; i < maxParticles; i++) {
             particles.push(new Particle());
+        }
+
+        // Draw connections
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particles.length; a++) {
+                // Check distance to mouse for connecting lines
+                if (mouse.x !== null && mouse.y !== null) {
+                    let dx = mouse.x - particles[a].x;
+                    let dy = mouse.y - particles[a].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.strokeStyle = `rgba(0, 210, 255, ${(1 - dist / 120) * 0.08})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+
+                // Check distance to other particles
+                for (let b = a + 1; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 85) {
+                        opacityValue = (1 - distance / 85) * 0.05;
+                        ctx.strokeStyle = `rgba(168, 85, 247, ${opacityValue})`;
+                        ctx.lineWidth = 0.4;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
         }
 
         function animate() {
@@ -608,6 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 particles[i].update();
                 particles[i].draw();
             }
+            connect();
             requestAnimationFrame(animate);
         }
         animate();
