@@ -301,8 +301,8 @@ header {
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
-    max-width: 1200px;
+    width: 95%;
+    max-width: 1760px;
     z-index: 1000;
     background: rgba(4, 4, 7, 0.4);
     backdrop-filter: blur(20px) saturate(180%);
@@ -3073,7 +3073,7 @@ body.vmodal-open {
     position: relative;
     padding: 24px 20px; /* Thinner padding */
     background: var(--bg-card);
-    border: 1px solid var(--border-glass);
+    border: none !important; /* No stroke */
     border-radius: 20px;
     /* Premium visual blur/fade at the edges of the scrolling ticker */
     mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
@@ -3124,10 +3124,10 @@ body.vmodal-open {
 
 /* OUJ Logo Visibility Fix */
 .brand-logo img[src*="OUJ.png"] {
-    filter: invert(1) brightness(1) opacity(0.75) !important;
+    filter: brightness(0) invert(1) opacity(0.75) !important;
 }
 .brand-logo:hover img[src*="OUJ.png"] {
-    filter: invert(1) brightness(1.2) opacity(1) !important;
+    filter: brightness(0) invert(1) opacity(1) !important;
 }
 
 @keyframes scrollMarqueeLeft {
