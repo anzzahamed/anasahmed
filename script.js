@@ -451,20 +451,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 heroCanvas.style.opacity = '0.8';
                 heroCanvas.style.visibility = 'visible';
 
-                // Load ALL frames immediately for smooth, frame-accurate animation
+                // Load remaining frames in small delayed batches to prevent clogging the browser's request queue
                 let preloadStarted = false;
                 const startPreloadRemaining = () => {
                     if (preloadStarted) return;
                     preloadStarted = true;
-                    for (let i = 0; i < totalFrames; i++) {
-                        if (i === startFrame) continue;
-                        images[i].src = framePaths[i];
-                        images[i].onload = () => { loadedCount++; };
-                        images[i].onerror = () => { loadedCount++; };
-                    }
+                    setTimeout(() => {
+                        let i = 0;
+                        function loadNextBatch() {
+                            const batchSize = 10;
+                            const end = Math.min(totalFrames, i + batchSize);
+                            for (; i < end; i++) {
+                                if (i === startFrame) continue;
+                                images[i].src = framePaths[i];
+                                images[i].onload  = () => { loadedCount++; };
+                                images[i].onerror = () => { loadedCount++; };
+                            }
+                            if (i < totalFrames) {
+                                setTimeout(loadNextBatch, 150);
+                            }
+                        }
+                        loadNextBatch();
+                    }, 2000); // 2-second delay to prioritize initial page load
                 };
 
-                // Start loading remaining frames immediately
+                // Start loading remaining frames with delay
                 startPreloadRemaining();
             };
 
@@ -620,10 +631,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const vIframe = document.getElementById('vmodal-iframe');
     const vCloseBtn = document.getElementById('vmodal-close');
 
-    function openVideoModal(videoId) {
+    function openVideoModal(videoId, driveSrc = '', isVertical = false) {
         if (!vModal || !vIframe) return;
-        // Full Vimeo player — no background/muted/loop so audio and controls work
-        vIframe.src = `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
+        if (driveSrc) {
+            vIframe.src = driveSrc;
+        } else {
+            // Full Vimeo player — no background/muted/loop so audio and controls work
+            vIframe.src = `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
+        }
+        if (isVertical) {
+            vModal.classList.add('vmodal-vertical');
+        } else {
+            vModal.classList.remove('vmodal-vertical');
+        }
         vModal.classList.add('active');
         vModal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('vmodal-open');
@@ -632,16 +652,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeVideoModal() {
         if (!vModal || !vIframe) return;
         vModal.classList.remove('active');
+        vModal.classList.remove('vmodal-vertical'); // Clean up class on close
         vModal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('vmodal-open');
         // Clear src to actually stop the video & free memory
         setTimeout(() => { vIframe.src = ''; }, 300);
     }
 
-    // Attach click to every portfolio card that has a video id
-    document.querySelectorAll('.portfolio-item[data-video-id]').forEach(card => {
-        card.addEventListener('click', () => {
-            openVideoModal(card.dataset.videoId);
+    // Attach click to every portfolio card that has a video id or drive src
+    document.querySelectorAll('.portfolio-item[data-video-id], .portfolio-item[data-drive-src]').forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('a')) return;
+            
+            const isVertical = card.dataset.vertical === 'true';
+            if (card.dataset.driveSrc) {
+                openVideoModal('', card.dataset.driveSrc, isVertical);
+            } else {
+                openVideoModal(card.dataset.videoId, '', isVertical);
+            }
         });
         card.style.cursor = 'pointer';
     });

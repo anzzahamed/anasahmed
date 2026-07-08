@@ -298,30 +298,34 @@ h1, h2, h3, h4, h5, h6 {
    ========================================== */
 header {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
     z-index: 1000;
-    background: rgba(4, 4, 7, 0.45);
+    background: rgba(4, 4, 7, 0.4);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid var(--border-glass);
-    transition: var(--transition-smooth);
+    border: none !important; /* No stroke */
+    border-radius: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
 }
 
 header.scrolled {
-    padding: 8px 0;
-    background: rgba(4, 4, 7, 0.7);
-    border-bottom-color: rgba(255,255,255,0.1);
+    top: 12px;
+    background: rgba(4, 4, 7, 0.65);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
 }
 
 .header-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 1760px; /* Widened header container to match main container */
+    width: 100%;
     margin: 0 auto;
-    padding: 12px 24px; /* Shrunk padding from 16px to decrease height */
+    padding: 6px 24px; /* Thinner padding */
     transition: var(--transition-smooth);
 }
 
@@ -3067,7 +3071,7 @@ body.vmodal-open {
     width: 100%;
     overflow: hidden;
     position: relative;
-    padding: 40px 20px;
+    padding: 24px 20px; /* Thinner padding */
     background: var(--bg-card);
     border: 1px solid var(--border-glass);
     border-radius: 20px;
@@ -3080,7 +3084,14 @@ body.vmodal-open {
     display: flex;
     width: max-content;
     gap: 80px;
-    animation: scrollMarquee 40s linear infinite;
+}
+
+.marquee-left {
+    animation: scrollMarqueeLeft 40s linear infinite;
+}
+
+.marquee-right {
+    animation: scrollMarqueeRight 40s linear infinite;
 }
 
 .marquee-track:hover {
@@ -3097,8 +3108,10 @@ body.vmodal-open {
 }
 
 .brand-logo img {
-    max-height: 100%;
-    max-width: 100%;
+    height: auto;
+    width: auto;
+    max-height: 40px; /* Equal sizing limits */
+    max-width: 120px;
     object-fit: contain;
     /* Soft grayscale blending by default */
     filter: grayscale(1) brightness(0.8) opacity(0.5);
@@ -3109,11 +3122,50 @@ body.vmodal-open {
     filter: grayscale(0) brightness(1) opacity(1);
 }
 
-@keyframes scrollMarquee {
+/* OUJ Logo Visibility Fix */
+.brand-logo img[src*="OUJ.png"] {
+    filter: invert(1) brightness(1) opacity(0.75) !important;
+}
+.brand-logo:hover img[src*="OUJ.png"] {
+    filter: invert(1) brightness(1.2) opacity(1) !important;
+}
+
+@keyframes scrollMarqueeLeft {
     0% {
         transform: translateX(0);
     }
     100% {
         transform: translateX(-50%);
     }
+}
+
+@keyframes scrollMarqueeRight {
+    0% {
+        transform: translateX(-50%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* ==========================================
+   VERTICAL PORTFOLIO VIDEO & MODAL STYLING
+   ========================================== */
+.portfolio-item.vertical-video .portfolio-thumb {
+    aspect-ratio: 9 / 16 !important;
+}
+
+@media (min-width: 769px) {
+    .portfolio-horizontal-scroll-wrap:not(.disable-horizontal-scroll) .portfolio-item[data-category="video"].vertical-video {
+        width: 253px !important; /* Matches height of 450px at 9:16 aspect ratio */
+    }
+}
+
+/* Vertical Video Modal Adjustments */
+.vmodal-overlay.vmodal-vertical .vmodal-box {
+    max-width: 420px; /* Thinner box for vertical videos */
+}
+
+.vmodal-overlay.vmodal-vertical .vmodal-player-wrap {
+    padding-top: 177.77%; /* 9:16 aspect ratio */
 }
