@@ -418,9 +418,15 @@ header.scrolled {
     opacity: 0.95; /* High premium visibility */
     transition: opacity 0.4s ease, visibility 0.4s ease;
     
-    /* Center radial mask on the model subject on the right, fully feathering the top-left and edges to 0 */
-    mask-image: radial-gradient(circle at 65% 50%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.8) 45%, rgba(0,0,0,0) 78%) !important;
-    -webkit-mask-image: radial-gradient(circle at 65% 50%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.8) 45%, rgba(0,0,0,0) 78%) !important;
+    /* Composite mask: radial feather on edges + linear bottom fade for smooth dissolve */
+    mask-image: 
+        linear-gradient(to bottom, black 55%, transparent 92%),
+        radial-gradient(circle at 65% 50%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.8) 45%, rgba(0,0,0,0) 78%);
+    mask-composite: intersect;
+    -webkit-mask-image: 
+        linear-gradient(to bottom, black 55%, transparent 92%),
+        radial-gradient(circle at 65% 50%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.8) 45%, rgba(0,0,0,0) 78%);
+    -webkit-mask-composite: destination-in;
 }
 
 
@@ -808,21 +814,94 @@ header.scrolled {
     padding-left: 56px; /* Increased to accommodate logos on the timeline track */
 }
 
-.timeline::after {
-    content: '';
+/* Static ::after line removed — replaced by JS-driven animated line */
+.timeline::after { display: none; }
+
+/* ── Animated Timeline Line Track ── */
+.timeline-track {
     position: absolute;
     top: 0;
-    bottom: 0;
-    left: 20px; /* Centered with new padding */
+    left: 20px;
     width: 2px;
-    background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple), transparent);
-    z-index: 1 !important; /* Rendered below content items */
+    height: 100%;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    z-index: 1;
+    overflow: visible;
+}
+
+/* The reveal fill — animated via JS */
+.timeline-line-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;        /* starts hidden, JS drives this to 100% */
+    border-radius: 2px;
+    background: linear-gradient(
+        to bottom,
+        #00d2ff 0%,
+        #3b82f6 45%,
+        #a855f7 100%
+    );
+    transition: height 0.05s linear;
+    will-change: height;
+}
+
+/* Glowing tip that sits at the bottom edge of the fill */
+.timeline-glow-tip {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+        0 0 4px  2px  rgba(0, 210, 255, 0.95),
+        0 0 12px 4px  rgba(59, 130, 246, 0.75),
+        0 0 25px 8px  rgba(168, 85, 247, 0.55);
+    animation: glowPulse 1.6s ease-in-out infinite;
+    will-change: transform, box-shadow;
+    /* top is set dynamically by JS */
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        box-shadow:
+            0 0 4px  2px  rgba(0, 210, 255, 0.95),
+            0 0 12px 4px  rgba(59, 130, 246, 0.75),
+            0 0 25px 8px  rgba(168, 85, 247, 0.55);
+        transform: translateX(-50%) scale(1);
+    }
+    50% {
+        box-shadow:
+            0 0 8px  4px  rgba(0, 210, 255, 1),
+            0 0 20px 8px  rgba(59, 130, 246, 0.85),
+            0 0 40px 12px rgba(168, 85, 247, 0.65);
+        transform: translateX(-50%) scale(1.3);
+    }
 }
 
 .timeline-item {
     position: relative;
     margin-bottom: 48px;
     z-index: 5 !important; /* Rendered above connector line */
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+    will-change: opacity, transform;
+}
+
+/* Override global scroll-reveal.reveal-active to keep timeline items at 0 opacity until the line tip reaches them */
+.timeline .timeline-item.scroll-reveal.reveal-active {
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.timeline .timeline-item.scroll-reveal.reveal-active.active-item {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .timeline-item:last-child {
@@ -844,6 +923,14 @@ header.scrolled {
     justify-content: center;
     overflow: hidden;
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-color 0.2s ease-out;
+    will-change: transform, box-shadow;
+}
+
+.timeline-item.active-item .timeline-marker-logo {
+    transform: scale(1.18);
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.55), 0 0 10px rgba(0, 210, 255, 0.3);
 }
 
 .company-logo-wrap {
@@ -1723,22 +1810,7 @@ footer {
     gap: 6px;
 }
 
-@keyframes circleExpandReveal {
-    0% {
-        -webkit-mask-image: radial-gradient(circle, transparent 0%, black 0%);
-        mask-image: radial-gradient(circle, transparent 0%, black 0%);
-        opacity: 1;
-    }
-    10% {
-        opacity: 1;
-    }
-    100% {
-        -webkit-mask-image: radial-gradient(circle, transparent 150%, black 150%);
-        mask-image: radial-gradient(circle, transparent 150%, black 150%);
-        opacity: 0;
-        visibility: hidden;
-    }
-}
+
 
 /* Ripple expanding animation */
 .loader-ripple {
@@ -2719,17 +2791,49 @@ body.vmodal-open {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #03000a; /* Deep luxury dark background */
+    background-color: transparent; /* Determined by the panels underneath */
     z-index: 99999;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s ease;
+    pointer-events: auto;
+    transition: visibility 1.2s ease;
 }
 
 #intro-loader.fade-out {
-    animation: circleExpandReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    visibility: hidden;
     pointer-events: none;
+}
+
+/* Left and Right sliding panels */
+#intro-loader::before,
+#intro-loader::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background-color: #03000a; /* Deep luxury dark background */
+    z-index: 1;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+}
+
+#intro-loader::before {
+    left: 0;
+}
+
+#intro-loader::after {
+    right: 0;
+}
+
+/* Slide panels away left and right */
+#intro-loader.fade-out::before {
+    transform: translateX(-100%);
+}
+
+#intro-loader.fade-out::after {
+    transform: translateX(100%);
 }
 
 .loader-content {
@@ -2737,6 +2841,13 @@ body.vmodal-open {
     flex-direction: column;
     align-items: center;
     gap: 16px;
+    z-index: 10; /* Above the panels */
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#intro-loader.fade-out .loader-content {
+    opacity: 0;
+    transform: translateY(-24px);
 }
 
 .loader-logo {
@@ -2938,5 +3049,71 @@ body.vmodal-open {
     }
     .toast-content {
         justify-content: center;
+    }
+}
+
+/* ==========================================
+   BRANDS MARQUEE SECTION
+   ========================================== */
+.brands-section {
+    padding: 60px 0;
+    background: var(--bg-primary);
+    overflow: hidden;
+}
+
+.marquee-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 40px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 20px;
+    /* Premium visual blur/fade at the edges of the scrolling ticker */
+    mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+}
+
+.marquee-track {
+    display: flex;
+    width: max-content;
+    gap: 80px;
+    animation: scrollMarquee 40s linear infinite;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 150px;
+    flex-shrink: 0;
+}
+
+.brand-logo img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    /* Soft grayscale blending by default */
+    filter: grayscale(1) brightness(0.8) opacity(0.5);
+    transition: filter 0.4s ease, opacity 0.4s ease;
+}
+
+.brand-logo:hover img {
+    filter: grayscale(0) brightness(1) opacity(1);
+}
+
+@keyframes scrollMarquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
     }
 }

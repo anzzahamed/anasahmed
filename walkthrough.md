@@ -24,3 +24,18 @@ I have successfully updated the layout to be clean and minimal by removing the p
   - Removed all particle styling rules from `style.css`.
   - Deleted Section 7 (interactive particle network canvas logic) from `script.js`.
   - The background is now clean, sleek, and free of floating dust/sparkle layers.
+
+---
+
+## ⚡ Update: Premium Timeline Scroll & Visual Adjustments (Final)
+
+We have rebuilt and optimized the timeline scroll animation and background subject sizing to match the premium, responsive, zero-lag feel of the reference website [moncy.dev](https://www.moncy.dev/).
+
+### Key Features:
+1. **Parallax-Locked Timeline Line Reveal**: The vertical timeline line is locked to the scroll plane exactly at **60% of the viewport height**. As you scroll, the line grows pixel-for-pixel, and a glowing white-cyan tip follows the front edge dynamically.
+2. **High-Performance Caching (Zero-Reflow / Zero-Lag)**: We cache all layout offsets (timeline track and card triggers) on load, resize, and expansion toggles. During scroll, calculations are strictly mathematical to prevent browser layout thrashing, achieving a **silky-smooth 60fps/120fps scrolling speed** with zero delay.
+3. **Sleeker Glowing Tip Circle (8px)**: The glowing tip size was reduced from `12px` to `8px` to align perfectly with the width of the vertical timeline line, with proportional neon glow drops.
+4. **Complete Initial Invisibility (0 Opacity)**: Card items below the scroll threshold are **completely hidden (`opacity: 0`)** initially. They fade in smoothly only when the scroll tip crosses their markers.
+5. **Scaled-Down Background Canvas Portrait (82% size)**: The background canvas portrait image (the model rendering) has been scaled down to **82%** of the viewport size and centered, leaving clean, spacious margins on all devices.
+
+

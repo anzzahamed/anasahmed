@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 1. SCROLL PROGRESS TRACKING & STICKY HEADER
@@ -6,17 +7,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBar = document.getElementById('scroll-progress');
     const whatsappBtn = document.getElementById('whatsapp-fab');
     const heroSection = document.getElementById('hero');
-    
+
     window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
-        
+
         // Header background fade
         if (scrollY > 50) {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
         }
-        
+
         // Scroll progress bar width
         const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
         if (totalScroll > 0) {
@@ -118,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. ANIMATE SKILLS METER
     // ==========================================
     const skillBars = document.querySelectorAll('.skill-level-fill');
-    
+
     function animateSkillBars() {
         skillBars.forEach(bar => {
             const progress = bar.getAttribute('data-progress');
@@ -132,8 +133,127 @@ document.addEventListener('DOMContentLoaded', () => {
         animateSkillBars();
     }
 
+    // ==========================================
+    // 5. TIMELINE SCROLL-REVEAL LINE ANIMATION
+    // ==========================================
+    (function initTimelineAnimation() {
+        const timeline = document.querySelector('.timeline');
+        if (!timeline) return;
 
+        const items = document.querySelectorAll('.timeline-item');
 
+        // --- Inject the track + fill + glow tip elements ---
+        const track = document.createElement('div');
+        track.className = 'timeline-track';
+
+        const fill = document.createElement('div');
+        fill.className = 'timeline-line-fill';
+
+        const tip = document.createElement('div');
+        tip.className = 'timeline-glow-tip';
+
+        track.appendChild(fill);
+        track.appendChild(tip);
+        timeline.prepend(track);
+
+        // --- Cache layout offsets to prevent layout thrashing (reflow lag) ---
+        let trackPageTop = 0;
+        let trackHeight = 0;
+        let itemTriggers = [];
+
+        function updateLayoutMeasurements() {
+            const trackRect = track.getBoundingClientRect();
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            trackPageTop = trackRect.top + scrollY;
+            trackHeight = trackRect.height;
+
+            itemTriggers = Array.from(items).map(item => {
+                const rect = item.getBoundingClientRect();
+                return {
+                    element: item,
+                    pageTriggerY: rect.top + scrollY + 30 // Center of marker logo
+                };
+            });
+        }
+
+        // Initialize layout measurements
+        updateLayoutMeasurements();
+
+        // Re-measure when size changes or pages fully render
+        window.addEventListener('resize', updateLayoutMeasurements);
+        window.addEventListener('load', updateLayoutMeasurements);
+
+        // Re-measure after read-more details toggle open/close (since section height shifts)
+        document.querySelectorAll('.read-more-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                setTimeout(updateLayoutMeasurements, 350);
+            });
+        });
+
+        // --- Scroll logic ---
+        let isAnimating = false;
+
+        function updateTimeline() {
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            const vh = window.innerHeight;
+
+            // Lock trigger line to 60% viewport height
+            const triggerY = scrollY + (vh * 0.60);
+
+            let targetFillH = 0;
+            if (triggerY < trackPageTop) {
+                targetFillH = 0;
+            } else if (triggerY > trackPageTop + trackHeight) {
+                targetFillH = trackHeight;
+            } else {
+                targetFillH = triggerY - trackPageTop;
+            }
+
+            const currentFillPct = (targetFillH / trackHeight) * 100;
+            const fillH = targetFillH;
+
+            // Apply positions instantly (zero delay)
+            fill.style.height = fillH + 'px';
+
+            const tipOffsetPx = 4; // Half of tip width (8px / 2)
+            tip.style.top = (fillH - tipOffsetPx) + 'px';
+
+            // Show tip only when it's actively tracing the middle of the track
+            if (currentFillPct > 0.5 && currentFillPct < 99.5) {
+                tip.style.opacity = '1';
+            } else {
+                tip.style.opacity = '0';
+            }
+
+            // Dynamically activate items based on the cached trigger coordinates
+            const tipPageY = trackPageTop + fillH;
+
+            for (let i = 0; i < itemTriggers.length; i++) {
+                const trigger = itemTriggers[i];
+                if (tipPageY >= trigger.pageTriggerY) {
+                    trigger.element.classList.add('active-item');
+                } else {
+                    trigger.element.classList.remove('active-item');
+                }
+            }
+        }
+
+        // Performance-gated scroll listener (runs at screen refresh rate, zero lag)
+        function onScroll() {
+            if (!isAnimating) {
+                isAnimating = true;
+                requestAnimationFrame(() => {
+                    updateTimeline();
+                    isAnimating = false;
+                });
+            }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // Initial paint
+        updateTimeline();
+    })();
 
 
     // ==========================================
@@ -150,10 +270,10 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         document.body.appendChild(toast);
-        
+
         // Trigger slide in
         setTimeout(() => toast.classList.add('active'), 50);
-        
+
         // Auto remove after 4.5 seconds
         setTimeout(() => {
             toast.classList.remove('active');
@@ -184,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Google Form Response endpoint
             const googleFormUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLScM7tpfeBjfM4NLmbLHfNsZ9OQMLPEvvB2cLIObrWWQjU262Q/formResponse";
-            
+
             const formData = new URLSearchParams();
             formData.append('entry.1451078961', nameVal);
             formData.append('entry.1433838400', emailVal);
@@ -199,19 +319,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: formData.toString()
             })
-            .then(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
-                
-                showToast('successfully sent the message', 'success');
-                contactForm.reset();
-            })
-            .catch((error) => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
-                showToast('Oops! Something went wrong. Please try again.', 'error');
-                console.error('Submission error:', error);
-            });
+                .then(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+
+                    showToast('successfully sent the message', 'success');
+                    contactForm.reset();
+                })
+                .catch((error) => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                    showToast('Oops! Something went wrong. Please try again.', 'error');
+                    console.error('Submission error:', error);
+                });
         });
     }
 
@@ -289,11 +409,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', resizeCanvas);
 
         function drawFrame(index) {
-            // Map request to nearest preloaded frame index
-            let targetIndex = index;
-            if (index % 3 !== 0 && index !== startFrame && index !== 0 && index !== totalFrames - 1) {
-                targetIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(index / 3) * 3));
-            }
+            // Use exact frame index — all frames are preloaded
+            let targetIndex = Math.min(totalFrames - 1, Math.max(0, index));
 
             const img = images[targetIndex];
             if (img && img.complete && img.naturalWidth > 0 && targetIndex !== lastDrawnFrame) {
@@ -303,16 +420,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const canvasRatio = canvasWidth / canvasHeight;
 
                 let drawWidth, drawHeight, drawX, drawY;
+                const scale = 0.82; // Make portrait subject 18% smaller to look clean and spacious
                 if (canvasRatio > imgRatio) {
-                    drawHeight = canvasHeight;
-                    drawWidth = canvasHeight * imgRatio;
-                    drawX = canvasWidth - drawWidth - (canvasWidth * 0.03);
-                    drawY = 0;
+                    drawHeight = canvasHeight * scale;
+                    drawWidth = drawHeight * imgRatio;
+                    // Align on the right side with premium padding
+                    drawX = canvasWidth - drawWidth - (canvasWidth * 0.05);
+                    drawY = (canvasHeight - drawHeight) / 2; // Vertically centered
                 } else {
-                    drawWidth = canvasWidth;
-                    drawHeight = canvasWidth / imgRatio;
-                    drawX = 0;
-                    drawY = 75;
+                    drawWidth = canvasWidth * scale;
+                    drawHeight = drawWidth / imgRatio;
+                    drawX = (canvasWidth - drawWidth) / 2; // Horizontally centered
+                    drawY = 85; // Slightly pushed down for mobile navigation spacing
                 }
 
                 heroCtx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
@@ -332,29 +451,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 heroCanvas.style.opacity = '0.8';
                 heroCanvas.style.visibility = 'visible';
 
-                // Load every 3rd frame to save 67% bandwidth and load instantly
+                // Load ALL frames immediately for smooth, frame-accurate animation
                 let preloadStarted = false;
                 const startPreloadRemaining = () => {
                     if (preloadStarted) return;
                     preloadStarted = true;
                     for (let i = 0; i < totalFrames; i++) {
                         if (i === startFrame) continue;
-                        
-                        // Load only multiples of 3, boundary frames, and start frame
-                        if (i % 3 === 0 || i === startFrame || i === 0 || i === totalFrames - 1) {
-                            images[i].src = framePaths[i];
-                            images[i].onload  = () => { loadedCount++; };
-                            images[i].onerror = () => { loadedCount++; };
-                        }
+                        images[i].src = framePaths[i];
+                        images[i].onload = () => { loadedCount++; };
+                        images[i].onerror = () => { loadedCount++; };
                     }
                 };
 
-                // Trigger loading after 1.5s delay OR immediately on first user scroll
-                const deferTimer = setTimeout(startPreloadRemaining, 1500);
-                window.addEventListener('scroll', () => {
-                    clearTimeout(deferTimer);
-                    startPreloadRemaining();
-                }, { once: true, passive: true });
+                // Start loading remaining frames immediately
+                startPreloadRemaining();
             };
 
             firstImg.onerror = () => {
@@ -379,16 +490,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function smoothScrollLoop() {
-            // Increase LERP factor to 0.28 to completely eliminate scrolling lag
+            // LERP factor 0.55 = ultra-fast, zero-lag frame tracking
             const diff = targetScrollTop - currentScrollTop;
-            if (Math.abs(diff) > 0.15) {
-                currentScrollTop += diff * 0.28;
+            if (Math.abs(diff) > 0.1) {
+                currentScrollTop += diff * 0.55;
                 drawAndFade();
                 requestAnimationFrame(smoothScrollLoop);
             } else {
                 currentScrollTop = targetScrollTop;
                 drawAndFade();
-                scrollLoopRunning = false; // Stop requestAnimationFrame when static to save CPU/GPU
+                scrollLoopRunning = false; // Stop loop when settled
             }
         }
 
@@ -397,17 +508,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const heroHeight = heroSection?.offsetHeight || 0;
                 const aboutHeight = aboutSection?.offsetHeight || 0;
                 const expHeight = experienceSection?.offsetHeight || 0;
-                
+
                 const maxScroll = heroHeight + aboutHeight + expHeight;
-                
+
                 const fraction = Math.min(1, Math.max(0, currentScrollTop / maxScroll));
                 const targetFrame = startFrame + Math.round(fraction * (totalFrames - 1 - startFrame));
-                
+
                 drawFrame(targetFrame);
-                
+
                 const fadeStart = maxScroll - 200;
                 const fadeEnd = maxScroll + 200;
-                
+
                 if (currentScrollTop > fadeStart) {
                     const fadeProgress = Math.min(1, (currentScrollTop - fadeStart) / (fadeEnd - fadeStart));
                     heroCanvas.style.opacity = (0.8 * (1 - fadeProgress)).toString();
@@ -421,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Start scroll tracker loop on scroll trigger instead of infinite background loop
         window.addEventListener('scroll', updateTargetFrame, { passive: true });
-        
+
 
 
         preload();
@@ -450,17 +561,17 @@ document.addEventListener('DOMContentLoaded', () => {
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             const tabId = button.getAttribute('data-tab');
-            
+
             tabButtons.forEach(btn => btn.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
-            
+
             button.classList.add('active');
             updateSkillsIndicator();
 
             const activeContent = document.getElementById(`skills-tab-${tabId}`);
             if (activeContent) {
                 activeContent.classList.add('active');
-                
+
                 // Trigger layout recalibration on active grid
                 const grid = activeContent.querySelector('.skills-compact-grid');
                 if (grid && typeof grid._updateRows === 'function') {
@@ -483,17 +594,17 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle.addEventListener('click', () => {
             const targetId = toggle.getAttribute('data-target');
             const targetEl = document.getElementById(targetId);
-            
+
             if (targetEl) {
                 const isExpanded = targetEl.classList.toggle('expanded');
                 toggle.classList.toggle('expanded');
-                
+
                 // Toggle details-expanded state on the parent container card
                 const parentCard = toggle.closest('.timeline-content') || toggle.closest('.about-info') || toggle.closest('.edu-card');
                 if (parentCard) {
                     parentCard.classList.toggle('details-expanded', isExpanded);
                 }
-                
+
                 // Toggle text content
                 const hasDetails = toggle.innerText.toLowerCase().includes('details');
                 const actionText = isExpanded ? (hasDetails ? 'Hide Details' : 'Read Less') : (hasDetails ? 'Read Details' : 'Read More');
@@ -505,9 +616,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 11. VIDEO MODAL — open on card click
     // ==========================================
-    const vModal      = document.getElementById('video-modal');
-    const vIframe     = document.getElementById('vmodal-iframe');
-    const vCloseBtn   = document.getElementById('vmodal-close');
+    const vModal = document.getElementById('video-modal');
+    const vIframe = document.getElementById('vmodal-iframe');
+    const vCloseBtn = document.getElementById('vmodal-close');
 
     function openVideoModal(videoId) {
         if (!vModal || !vIframe) return;
@@ -555,48 +666,48 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     function initSkillsSeeMore() {
         const tabs = ['creative', 'ai', 'capabilities'];
-        
+
         tabs.forEach(tabId => {
             const tabContent = document.getElementById(`skills-tab-${tabId}`);
             if (!tabContent) return;
-            
+
             const grid = tabContent.querySelector('.skills-compact-grid');
             if (!grid) return;
-            
+
             const cards = grid.querySelectorAll('.skill-compact-card');
             if (cards.length === 0) return;
-            
+
             // Create See More button wrap
             const btnWrap = document.createElement('div');
             btnWrap.className = 'skills-see-more-wrap';
             btnWrap.style.display = 'none';
-            
+
             const btn = document.createElement('button');
             btn.className = 'btn btn-secondary skills-see-more-btn';
             btn.innerHTML = `See More <i class="fa-solid fa-chevron-down"></i>`;
             btnWrap.appendChild(btn);
             tabContent.appendChild(btnWrap);
-            
+
             let isExpanded = false;
-            
+
             const updateRows = () => {
                 // Reset card display classes
                 cards.forEach(c => c.classList.remove('hidden-row'));
-                
+
                 if (isExpanded) {
                     btn.innerHTML = `See Less <i class="fa-solid fa-chevron-up"></i>`;
                     btnWrap.style.display = 'flex';
                     return;
                 }
-                
+
                 // Get unique offsetTops to determine row positions
                 const offsets = Array.from(cards).map(c => c.offsetTop);
                 const uniqueOffsets = [...new Set(offsets)].sort((a, b) => a - b);
-                
+
                 if (uniqueOffsets.length > 2) {
                     btnWrap.style.display = 'flex';
                     btn.innerHTML = `See More <i class="fa-solid fa-chevron-down"></i>`;
-                    
+
                     const thirdRowOffset = uniqueOffsets[2];
                     cards.forEach(c => {
                         if (c.offsetTop >= thirdRowOffset) {
@@ -607,25 +718,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     btnWrap.style.display = 'none';
                 }
             };
-            
+
             btn.addEventListener('click', () => {
                 isExpanded = !isExpanded;
                 updateRows();
-                
+
                 // Scroll smoothly to the skills section title if collapsing
                 if (!isExpanded) {
                     tabContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             });
-            
+
             // Store update function on grid element to access it externally
             grid._updateRows = updateRows;
-            
+
             // Run update layout
             if (tabContent.classList.contains('active')) {
                 setTimeout(updateRows, 50);
             }
-            
+
             // Debounced resize handler
             let resizeTimeout;
             window.addEventListener('resize', () => {
@@ -634,20 +745,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-    
+
     // ==========================================
     // 13. MINIMAL & LUXURY PARTICLES BACKGROUND
     // ==========================================
     function initParticles() {
         const canvas = document.getElementById('particles-bg-canvas');
         if (!canvas) return;
-        
+
         // Hide particles completely on mobile screens
         if (window.innerWidth < 768) {
             canvas.style.display = 'none';
             return;
         }
-        
+
         const ctx = canvas.getContext('2d');
         let particles = [];
         let mouse = { x: null, y: null };
@@ -779,7 +890,7 @@ function initPortfolioFilter() {
     const items = document.querySelectorAll('.portfolio-grid .portfolio-item');
     const stickyWrap = document.getElementById('portfolio-sticky-wrap');
     const grid = document.querySelector('.portfolio-grid');
-    
+
     if (filterBtns.length === 0) return;
 
     let activeFilter = 'video';
@@ -822,7 +933,7 @@ function initPortfolioFilter() {
 
         const startY = 80;
         const endY = -(wrapHeight - viewportHeight);
-        
+
         const progress = Math.min(1, Math.max(0, (startY - rect.top) / (startY - endY)));
 
         const gridWidth = grid.scrollWidth;
@@ -897,11 +1008,11 @@ window.addEventListener('load', () => {
     const loader = document.getElementById('intro-loader');
     if (loader) {
         document.body.classList.add('overflow-hidden');
-        
+
         setTimeout(() => {
             loader.classList.add('fade-out');
             document.body.classList.remove('overflow-hidden');
-            
+
             // Add entrance class to reveal hero elements with a smooth premium stagger motion
             document.body.classList.add('site-revealed');
 
@@ -910,12 +1021,12 @@ window.addEventListener('load', () => {
             if (noticePopup && window.innerWidth <= 768) {
                 setTimeout(() => {
                     noticePopup.classList.add('active');
-                    
+
                     // Auto hide after 6.5 seconds
                     const autoHideTimer = setTimeout(() => {
                         closeNotice();
                     }, 6500);
-                    
+
                     function closeNotice() {
                         if (noticePopup.classList.contains('active')) {
                             noticePopup.classList.remove('active');
@@ -924,7 +1035,7 @@ window.addEventListener('load', () => {
                             document.removeEventListener('touchstart', handleOutsideTap);
                         }
                     }
-                    
+
                     // Close on X button click
                     const closeBtn = noticePopup.querySelector('.mobile-notice-close');
                     if (closeBtn) {
@@ -933,12 +1044,12 @@ window.addEventListener('load', () => {
                             closeNotice();
                         });
                     }
-                    
+
                     // Close when user taps anywhere else
                     function handleOutsideTap(e) {
                         closeNotice();
                     }
-                    
+
                     setTimeout(() => {
                         document.addEventListener('click', handleOutsideTap);
                         document.addEventListener('touchstart', handleOutsideTap, { passive: true });
