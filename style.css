@@ -2,30 +2,30 @@
    DESIGN SYSTEM & VARIABLES
    ========================================== */
 :root {
-    --bg-primary: #050508;
-    --bg-secondary: #0a0a12;
-    --bg-card: rgba(13, 13, 22, 0.55);
+    --bg-primary: #0a0e1a;
+    --bg-secondary: #0f1424;
+    --bg-card: rgba(15, 23, 42, 0.5);
     --border-glass: rgba(255, 255, 255, 0.08);
     --border-highlight: rgba(255, 255, 255, 0.16);
     
-    /* Blue to Purple neon gradient */
-    --grad-primary: linear-gradient(135deg, #00d2ff 0%, #3b82f6 40%, #a855f7 100%);
-    --grad-text: linear-gradient(135deg, #00d2ff 0%, #3b82f6 45%, #a855f7 100%);
+    /* Indigo/Purple neon gradient matching resith-s.vercel.app */
+    --grad-primary: linear-gradient(135deg, #6366f1 0%, #7c3aed 50%, #d946ef 100%);
+    --grad-text: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
     
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #64748b;
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8; /* Slate-400 for clean secondary text */
+    --text-muted: #64748b; /* Slate-500 */
     
-    --accent-blue: #00d2ff;
-    --accent-purple: #a855f7;
+    --accent-blue: #6366f1; /* Indigo */
+    --accent-purple: #7c3aed; /* Purple */
     
     /* Deep Apple-style soft blurred shadows */
     --shadow-glass: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    --shadow-blue-glow: 0 0 40px rgba(0, 210, 255, 0.18);
-    --shadow-purple-glow: 0 0 40px rgba(168, 85, 247, 0.18);
+    --shadow-blue-glow: 0 0 40px rgba(99, 102, 241, 0.18);
+    --shadow-purple-glow: 0 0 40px rgba(124, 58, 237, 0.18);
     
-    --font-heading: 'Montserrat', sans-serif;
-    --font-body: 'Poppins', sans-serif;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
     --font-script: 'Caveat', cursive;
     
     /* Apple spring physics translation curves */
@@ -3105,11 +3105,11 @@ body.vmodal-open {
 }
 
 .marquee-left {
-    animation: scrollMarqueeLeft 40s linear infinite;
+    animation: scrollMarqueeLeft 90s linear infinite;
 }
 
 .marquee-right {
-    animation: scrollMarqueeRight 40s linear infinite;
+    animation: scrollMarqueeRight 90s linear infinite;
 }
 
 .marquee-track:hover {
