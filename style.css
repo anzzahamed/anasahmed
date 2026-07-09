@@ -1328,6 +1328,7 @@ header.scrolled {
     top: 0 !important;
     height: auto !important;
     overflow: visible !important;
+    display: block !important;
 }
 
 /* Horizontal display for video grid on desktop */
