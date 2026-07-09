@@ -2906,18 +2906,28 @@ body.vmodal-open {
 }
 
 /* Site Entrance Cinematic Stagger Reveal */
-.hero-content, .hero-availability, .hero-quick-stats, #header {
+.hero-content, .hero-availability, .hero-quick-stats {
     opacity: 0;
     transform: translateY(18px);
     transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+#header {
+    opacity: 0;
+    transform: translateX(-50%) translateY(18px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .site-revealed .hero-content, 
 .site-revealed .hero-availability, 
-.site-revealed .hero-quick-stats,
-.site-revealed #header {
+.site-revealed .hero-quick-stats {
     opacity: 1;
     transform: translateY(0);
+}
+
+.site-revealed #header {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 /* Delay configs for staggered clean motion */
