@@ -2,9 +2,9 @@
    DESIGN SYSTEM & VARIABLES
    ========================================== */
 :root {
-    --bg-primary: #0a0e1a;
-    --bg-secondary: #0f1424;
-    --bg-card: rgba(15, 23, 42, 0.5);
+    --bg-primary: #050508;
+    --bg-secondary: #0a0a12;
+    --bg-card: rgba(13, 13, 22, 0.55);
     --border-glass: rgba(255, 255, 255, 0.08);
     --border-highlight: rgba(255, 255, 255, 0.16);
     
@@ -456,7 +456,7 @@ header.scrolled {
 }
 
 .hero-sub-title {
-    font-family: var(--font-body);
+    font-family: 'Poppins', sans-serif !important;
     font-size: 1.8rem;
     font-weight: 300; /* Thin font weight matching the screenshot */
     color: #b8a9ff; /* Light purple color matching the screenshot */
@@ -466,7 +466,7 @@ header.scrolled {
 }
 
 .hero-title-main {
-    font-family: var(--font-heading);
+    font-family: 'Poppins', sans-serif !important;
     font-size: 5.6rem; /* Giant desktop heading */
     font-weight: 900;
     text-transform: uppercase;
@@ -480,7 +480,7 @@ header.scrolled {
 }
 
 .hero-title-sub {
-    font-family: var(--font-heading);
+    font-family: 'Poppins', sans-serif !important;
     font-size: 5.0rem;
     font-weight: 900;
     text-transform: uppercase;
@@ -3090,9 +3090,10 @@ body.vmodal-open {
     overflow: hidden;
     position: relative;
     padding: 24px 20px; /* Thinner padding */
-    background: var(--bg-card);
+    background: transparent !important; /* Transparent background */
     border: none !important; /* No stroke */
-    border-radius: 20px;
+    border-radius: 0;
+    box-shadow: none !important; /* No shadow */
     /* Premium visual blur/fade at the edges of the scrolling ticker */
     mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
@@ -3110,10 +3111,6 @@ body.vmodal-open {
 
 .marquee-right {
     animation: scrollMarqueeRight 90s linear infinite;
-}
-
-.marquee-track:hover {
-    animation-play-state: paused;
 }
 
 .brand-logo {
@@ -3186,4 +3183,29 @@ body.vmodal-open {
 
 .vmodal-overlay.vmodal-vertical .vmodal-player-wrap {
     padding-top: 177.77%; /* 9:16 aspect ratio */
+}
+
+/* ==========================================
+   MOBILE DESIGN REALIGNMENT (Videos & Brands)
+   ========================================== */
+@media (max-width: 768px) {
+    /* Prevent vertical videos from overflowing the 240px container */
+    .portfolio-horizontal-scroll-wrap:not(.disable-horizontal-scroll) .portfolio-item[data-category="video"].vertical-video {
+        width: 125px !important;
+    }
+    
+    /* Make brand logos smaller on mobile */
+    .brand-logo {
+        height: 35px !important;
+        width: 90px !important;
+    }
+    .brand-logo img {
+        max-height: 25px !important;
+        max-width: 75px !important;
+    }
+    
+    /* Reduce marquee gap on mobile */
+    .marquee-track {
+        gap: 40px !important;
+    }
 }
