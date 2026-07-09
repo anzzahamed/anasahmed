@@ -90,29 +90,27 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollObserver.observe(element);
     });
 
-    // Navbar link highlighter on scroll
-    const navObserverOptions = {
-        root: null,
-        threshold: 0.4,
-        rootMargin: '-20% 0px -40% 0px'
-    };
+    // Navbar link highlighter on scroll (using pixel offsets for precise, instant detection)
+    window.addEventListener('scroll', () => {
+        let current = '';
+        const scrollPosition = window.scrollY + 200; // Offset for top nav height
 
-    const navObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const activeId = entry.target.getAttribute('id');
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${activeId}`) {
-                        link.classList.add('active');
-                    }
-                });
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
             }
         });
-    }, navObserverOptions);
 
-    sections.forEach(section => {
-        navObserver.observe(section);
+        if (current) {
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
     });
 
     // ==========================================
