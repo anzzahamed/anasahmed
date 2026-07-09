@@ -6,25 +6,28 @@ I have successfully updated the layout to be clean and minimal, optimized the pa
 
 ## 🛠️ Changes Implemented
 
-### 1. Typeface & Typography Realignment (resith-s.vercel.app)
+### 1. Typography & Theme Reversions
 * **File modified**: [index.html](file:///c:/Users/anchu/OneDrive/Documents/portfolio%20test%20website/index.html)
 * **File modified**: [style.css](file:///c:/Users/anchu/OneDrive/Documents/portfolio%20test%20website/style.css)
 * **Fix**:
-  - Replaced Google Font imports for Montserrat and Poppins with **Space Grotesk** and **Inter**.
-  - Updated headings to use `font-family: 'Space Grotesk', sans-serif` for a modern, geometric look.
-  - Updated body text to use `font-family: 'Inter', sans-serif` for clean readability.
+  - Reverted the background color back to your original deep black background (`#050508` / `#0a0a12`).
+  - Added Poppins back to the Google Font import.
+  - Specially assigned the **Poppins** font-family to the main hero title headings and sub-title stacks (e.g. "Multimedia Designer"), so that it pops exactly the way you prefer.
 
-### 2. Indigo & Deep Blue Color Palette
+### 2. Transparent & Continuous Brand Marquees
+* **File modified**: [index.html](file:///c:/Users/anchu/OneDrive/Documents/portfolio%20test%20website/index.html)
 * **File modified**: [style.css](file:///c:/Users/anchu/OneDrive/Documents/portfolio%20test%20website/style.css)
 * **Fix**:
-  - Shifted primary backgrounds to a clean deep dark blue (`#0a0e1a` / `#0f1424`).
-  - Swapped cyan-blue accents with high-fidelity **Indigo-Purple** tones (`#6366f1` / `#7c3aed`) for borders, gradients, and buttons.
-  - Set text primary to white (`#ffffff`) and secondary text to a clean slate grey (`#94a3b8`), exactly matching the coloring scheme of the reference site.
+  - Removed all `card-glass` style wrappers from the brand marquee rows in `index.html`.
+  - Set `.marquee-container` background to transparent and box-shadow to none, making the logos float directly on the page background under the section title text.
+  - Removed the hover-paused state (`.marquee-track:hover`) so that the dual-scrolling brand logo animation **never stops scrolling** when hovered, moving continuously.
 
-### 3. Ultra-Slow Brand Marquee
+### 3. Mobile Layout Scaling & Alignment
 * **File modified**: [style.css](file:///c:/Users/anchu/OneDrive/Documents/portfolio%20test%20website/style.css)
 * **Fix**:
-  - Decreased the brand marquee animation scrolling speed from `40s` to `90s`. This creates a very slow, premium drift that is non-distracting and feels exceptionally premium.
+  - Fixed vertical video card clipping inside the `240px` mobile container by setting the vertical video item width to `125px !important` on mobile viewports. This matches the card aspect ratio (9:16) and fits it completely within the vertical bounds of the horizontal scroll viewport without any cropping.
+  - Scaled down the brand logos (`height: 35px`, `width: 90px`) and logo images on mobile screen sizes to make them smaller, compact, and perfectly sized.
+  - Shrunk the marquee logo gutter gap on mobile viewports to `40px` for balancedSpacing.
 
 ### 4. Floating Navigation Island & 'Hire Me'
 * **File modified**: [index.html](file:///c:/Users/anchu/OneDrive/Documents/portfolio%20test%20website/index.html)
@@ -34,16 +37,7 @@ I have successfully updated the layout to be clean and minimal, optimized the pa
   - Centered the floating pill layout relative to desktop viewports while keeping it snapped to standard full-width top headers on mobile viewports.
   - Added a glowing **"Hire Me"** action button to the right of the CV link which smoothly scrolls down to the contact form.
 
-### 5. Vertical Video Aspect Ratio & Modals
-* **File modified**: [index.html](file:///c:/Users/anchu/OneDrive/Documents/portfolio%20test%20website/index.html)
-* **File modified**: [style.css](file:///c:/Users/anchu/OneDrive/Documents/portfolio%20test%20website/style.css)
-* **Fix**:
-  - Added `vertical-video` and `data-vertical="true"` classes/attributes to the portrait Google Drive video project items.
-  - Substituted heavy Drive iframes in the cards with beautifully pre-rendered, high-fidelity static thumbnails to optimize initial load time.
-  - Set vertical-video thumb width to `253px` (matching the horizontal card height at 9:16 aspect ratio), eliminating any side/top letterboxes or black spaces.
-  - Programmed the video modal to dynamically scale to a vertical portrait layout (max-width `420px`, aspect-ratio `9 / 16`) when playing a vertical video.
-
-### 6. Page Load Optimization (Progressive Batch Preloading)
+### 5. Page Load Optimization (Progressive Batch Preloading)
 * **File modified**: [script.js](file:///c:/Users/anchu/OneDrive/Documents/portfolio%20test%20website/script.js)
 * **Fix**:
   - Replaced immediate loading of all 239 scroll image frames with a **deferred progressive preloader**.
