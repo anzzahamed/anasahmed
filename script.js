@@ -380,6 +380,9 @@ document.addEventListener('DOMContentLoaded', () => {
             lastHeight = canvasHeight;
             heroCanvas.width = canvasWidth;
             heroCanvas.height = canvasHeight;
+            // Lock element style size to prevent iOS address-bar stretch/jumps
+            heroCanvas.style.width = canvasWidth + 'px';
+            heroCanvas.style.height = canvasHeight + 'px';
         }
 
         // Only responds to real layout changes (not iOS address-bar micro-resizes)
@@ -396,6 +399,9 @@ document.addEventListener('DOMContentLoaded', () => {
             canvasHeight = newHeight;
             heroCanvas.width = canvasWidth;
             heroCanvas.height = canvasHeight;
+            // Lock element style size to prevent iOS address-bar stretch/jumps
+            heroCanvas.style.width = canvasWidth + 'px';
+            heroCanvas.style.height = canvasHeight + 'px';
 
             if (imagesLoaded) {
                 lastDrawnFrame = -1;
