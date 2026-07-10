@@ -1170,12 +1170,15 @@ header.scrolled {
     gap: 16px;
     padding: 14px 18px;
     border-radius: 16px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transition: transform 0.3s ease;
 }
 
 .skill-compact-card:hover {
-    border-color: rgba(0, 210, 255, 0.25);
-    box-shadow: var(--shadow-glass), var(--shadow-blue-glow);
     transform: translateY(-3px);
 }
 
@@ -3211,11 +3214,48 @@ body.vmodal-open {
     }
     
     .services-grid {
-        grid-template-columns: 1fr !important;
-        gap: 16px !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
     }
+    
+    /* Hide services past the first 9 (3x3 grid) on mobile unless expanded */
+    .services-grid:not(.expanded) .service-card:nth-child(n+10) {
+        display: none !important;
+    }
+    
+    /* Center/stretch the 10th card if expanded on mobile (3 columns) */
+    .services-grid.expanded .service-card:last-child {
+        grid-column: span 3;
+    }
+    
     .service-card {
-        padding: 30px 20px !important;
+        padding: 12px 6px !important;
+        border-radius: 12px !important;
+    }
+    
+    .service-icon {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 1.1rem !important;
+        border-radius: 8px !important;
+        margin-bottom: 6px !important;
+    }
+    
+    .service-card h3 {
+        font-size: 0.68rem !important;
+        margin-top: 2px !important;
+        margin-bottom: 0 !important;
+        line-height: 1.25 !important;
+    }
+    
+    /* No description text on mobile view */
+    .service-card p {
+        display: none !important;
+    }
+    
+    .services-more-btn-wrap {
+        display: flex !important; /* Show toggle button on mobile */
+        margin-top: 24px;
     }
 }
 
@@ -3263,4 +3303,23 @@ body.vmodal-open {
     background: var(--grad-primary);
     color: #fff;
     box-shadow: 0 8px 20px rgba(168, 85, 247, 0.3);
+}
+
+.service-card h3 {
+    font-size: 1.25rem;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.service-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary); /* Slate-400 for clean secondary text style */
+    line-height: 1.6;
+}
+
+.services-more-btn-wrap {
+    display: none; /* Hidden on desktop by default */
+    justify-content: center;
+    margin-top: 40px;
 }

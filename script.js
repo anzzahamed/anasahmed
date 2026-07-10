@@ -1084,4 +1084,26 @@ window.addEventListener('load', () => {
             }
         }, 1300); // 1.3s duration matches progress animation perfectly
     }
+
+    // ==========================================
+    // KEY SERVICES MOBILE TOGGLE (READ MORE)
+    // ==========================================
+    const servicesGrid = document.querySelector('.services-grid');
+    const showMoreServicesBtn = document.getElementById('show-more-services-btn');
+
+    if (showMoreServicesBtn && servicesGrid) {
+        showMoreServicesBtn.addEventListener('click', () => {
+            const isExpanded = servicesGrid.classList.toggle('expanded');
+            if (isExpanded) {
+                showMoreServicesBtn.innerHTML = 'Read Less <i class="fa-solid fa-chevron-up"></i>';
+            } else {
+                showMoreServicesBtn.innerHTML = 'Read More <i class="fa-solid fa-chevron-down"></i>';
+                // Scroll back to the services section when collapsing
+                const servicesSection = document.getElementById('services');
+                if (servicesSection) {
+                    servicesSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    }
 });
