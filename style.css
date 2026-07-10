@@ -225,7 +225,7 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     justify-content: center;
     padding: 12px 28px;
-    border-radius: 12px;
+    border-radius: 9999px;
     font-family: var(--font-heading);
     font-weight: 600;
     font-size: 0.95rem;
@@ -518,7 +518,7 @@ header.scrolled {
 .hero-actions .btn {
     padding: 10px 20px;
     font-size: 0.85rem;
-    border-radius: 8px;
+    border-radius: 9999px;
     font-weight: 500;
 }
 
@@ -1661,7 +1661,7 @@ header.scrolled {
     padding: 16px 36px;
     font-size: 1rem;
     font-weight: 700;
-    border-radius: 14px;
+    border-radius: 9999px;
     display: inline-flex;
     align-items: center;
     gap: 12px;
@@ -1812,7 +1812,7 @@ footer {
     max-width: max-content !important;
     padding: 8px 16px !important;
     font-size: 0.8rem !important;
-    border-radius: 8px !important;
+    border-radius: 9999px !important;
     display: inline-flex !important;
     align-items: center;
     gap: 6px;
@@ -2355,7 +2355,7 @@ footer {
     .btn {
         padding: 9px 20px !important;
         font-size: 0.82rem !important;
-        border-radius: 10px !important;
+        border-radius: 9999px !important;
     }
 
     .skills-tab-nav, .portfolio-tabs {

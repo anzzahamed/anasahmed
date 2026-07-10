@@ -692,6 +692,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     function initSkillsSeeMore() {
         const tabs = ['creative', 'ai', 'capabilities'];
+        let globalSkillsExpanded = false;
+        const updateFunctions = [];
 
         tabs.forEach(tabId => {
             const tabContent = document.getElementById(`skills-tab-${tabId}`);
@@ -714,13 +716,11 @@ document.addEventListener('DOMContentLoaded', () => {
             btnWrap.appendChild(btn);
             tabContent.appendChild(btnWrap);
 
-            let isExpanded = false;
-
             const updateRows = () => {
                 // Reset card display classes
                 cards.forEach(c => c.classList.remove('hidden-row'));
 
-                if (isExpanded) {
+                if (globalSkillsExpanded) {
                     btn.innerHTML = `See Less <i class="fa-solid fa-chevron-up"></i>`;
                     btnWrap.style.display = 'flex';
                     return;
@@ -746,17 +746,19 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             btn.addEventListener('click', () => {
-                isExpanded = !isExpanded;
-                updateRows();
+                globalSkillsExpanded = !globalSkillsExpanded;
+                // Update all tabs to reflect the new global state
+                updateFunctions.forEach(fn => fn());
 
                 // Scroll smoothly to the skills section title if collapsing
-                if (!isExpanded) {
+                if (!globalSkillsExpanded) {
                     tabContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             });
 
             // Store update function on grid element to access it externally
             grid._updateRows = updateRows;
+            updateFunctions.push(updateRows);
 
             // Run update layout
             if (tabContent.classList.contains('active')) {
@@ -768,7 +770,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(updateRows, 100);
-            });
+            }, { passive: true });
         });
     }
 
