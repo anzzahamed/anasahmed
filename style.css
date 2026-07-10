@@ -1347,7 +1347,7 @@ header.scrolled {
     }
 
     .portfolio-horizontal-scroll-wrap:not(.disable-horizontal-scroll) .portfolio-item[data-category="video"] {
-        width: 800px !important; /* Made video sizing larger & more cinematic */
+        width: 960px !important; /* Made video sizing larger & more cinematic */
         flex-shrink: 0 !important;
     }
 }
@@ -2010,7 +2010,12 @@ footer {
     }
 
     .stat-num {
-        font-size: 1.6rem; /* Shrunk from 2rem */
+        font-size: 1.4rem; /* Shrunk from 2rem */
+    }
+
+    .stat-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.02em;
     }
 
     .about-grid {
@@ -2295,6 +2300,18 @@ footer {
         font-size: 1.8rem; /* Shrunk from 2.2rem */
     }
     
+    .hero-quick-stats {
+        gap: 16px !important;
+        padding-top: 16px !important;
+    }
+    .stat-num {
+        font-size: 1.15rem !important;
+    }
+    .stat-label {
+        font-size: 0.58rem !important;
+        letter-spacing: 0 !important;
+    }
+
     .hero-actions {
         flex-direction: row !important; /* 2x2 horizontal side-by-side buttons */
         width: 100% !important;
@@ -2467,20 +2484,20 @@ footer {
     }
 
     .portfolio-horizontal-scroll-wrap:not(.disable-horizontal-scroll) .portfolio-item[data-category="video"] {
-        width: 290px !important;
+        width: 340px !important;
         flex-shrink: 0 !important;
     }
 
     .portfolio-sticky-container {
         position: sticky !important;
         top: 90px !important;
-        height: 240px !important; /* Match 16:9 mobile video heights to remove empty voids */
+        height: 280px !important; /* Match 16:9 mobile video heights to remove empty voids */
         display: flex !important;
         align-items: center !important;
     }
 
     .portfolio-horizontal-scroll-wrap:not(.disable-horizontal-scroll) {
-        height: 140vh !important; /* Tight scroll distance */
+        height: 125vh !important; /* Tight scroll distance */
     }
 
     /* Smaller compact font sizes for all mobile text elements */
@@ -3176,7 +3193,7 @@ body.vmodal-open {
 
 @media (min-width: 769px) {
     .portfolio-horizontal-scroll-wrap:not(.disable-horizontal-scroll) .portfolio-item[data-category="video"].vertical-video {
-        width: 253px !important; /* Matches height of 450px at 9:16 aspect ratio */
+        width: 281px !important; /* Matches height of 500px at 9:16 aspect ratio */
     }
 }
 
@@ -3193,9 +3210,9 @@ body.vmodal-open {
    MOBILE DESIGN REALIGNMENT (Videos & Brands)
    ========================================== */
 @media (max-width: 768px) {
-    /* Prevent vertical videos from overflowing the 240px container */
+    /* Prevent vertical videos from overflowing the 280px container */
     .portfolio-horizontal-scroll-wrap:not(.disable-horizontal-scroll) .portfolio-item[data-category="video"].vertical-video {
-        width: 125px !important;
+        width: 140px !important;
     }
     
     /* Make brand logos smaller on mobile */
