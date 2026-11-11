@@ -27,18 +27,23 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="assets/scroll-images/ezgif-frame-020.jpg">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css?v=1.2">
+    <link rel="stylesheet" href="style.css?v=5.3">
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
 </head>
 <body>
-    <!-- Luxury Clean Intro Loader -->
+    <!-- Luxury Bubble-Pop Intro Reveal -->
     <div id="intro-loader">
-        <div class="loader-ripple"></div>
         <div class="loader-content">
-            <span class="loader-logo">ANAS AHMED</span>
+            <div class="loader-logo">
+                <span class="loader-word">ANAS</span>
+                <span class="loader-word loader-word-delayed">AHMED</span>
+            </div>
             <div class="loader-line"></div>
         </div>
     </div>
@@ -53,9 +58,6 @@
         </div>
     </div>
 
-    <!-- Particles Background Canvas -->
-    <canvas id="particles-bg-canvas"></canvas>
-
     <!-- Scroll Progress Bar -->
     <div class="scroll-progress" id="scroll-progress"></div>
 
@@ -63,6 +65,10 @@
 
     <!-- Scroll Animation Canvas for Hero, About, and Experience -->
     <canvas id="hero-scroll-canvas"></canvas>
+    <!-- Static Edge-Feather Vignette Canvas (Painted once on load/resize) -->
+    <canvas id="hero-vignette-canvas" aria-hidden="true"></canvas>
+    <!-- Atmospheric Gradient & Edge Vignette Overlay (Above Animation Canvas) -->
+    <div class="hero-ambient-layer" aria-hidden="true"></div>
 
 
 
@@ -77,6 +83,7 @@
                 <ul>
                     <li><a href="#about" class="nav-link">About</a></li>
                     <li><a href="#experience" class="nav-link">Experience</a></li>
+                    <li><a href="#reels" class="nav-link">Reels</a></li>
                     <li><a href="#skills" class="nav-link">Skills</a></li>
                     <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li>
@@ -103,8 +110,12 @@
                     <span class="hero-availability fade-in">Available for Work in Dubai</span>
                     <h1 class="fade-in hero-heading-stack">
                         <span class="hero-sub-title">Hi, I'm Anas Ahmed</span>
-                        <span class="hero-title-main">Multimedia</span>
-                        <span class="hero-title-sub">Designer</span>
+                        <div class="hero-title-wrapper">
+                            <span class="hero-title-main">Multimedia</span>
+                            <span class="hero-title-sub" aria-label="Designer">
+                                <span>D</span><span>E</span><span>S</span><span>I</span><span>G</span><span>N</span><span>E</span><span>R</span>
+                            </span>
+                        </div>
                     </h1>
                     <p class="hero-lead fade-in">
                         Senior Multimedia Designer & Video Editor. Crafting high-end digital experiences, premium motion graphics, and luxury brand visuals.
@@ -115,11 +126,11 @@
                     </div>
                     <div class="hero-quick-stats fade-in">
                         <div class="stat-item">
-                            <span class="stat-num">7+</span>
+                            <span class="stat-num" data-count="7" data-suffix="+">7+</span>
                             <span class="stat-label">Years Exp</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-num">100%</span>
+                            <span class="stat-num" data-count="100" data-suffix="%">100%</span>
                             <span class="stat-label">Fast Execution</span>
                         </div>
                         <div class="stat-item">
@@ -152,95 +163,68 @@
                     <h2>About Me</h2>
                     <div class="title-bar"></div>
                 </div>
-                
-                <div class="about-grid">
-                    <div class="about-info card-glass scroll-reveal stagger-1">
-                        <h3>Creative Visionary</h3>
-                        <p>I am a visual thinker who operates at the intersection of design, cinematography, and technology. Having spent over 7 years in the competitive UAE market, I've had the privilege of transforming brands across diverse sectors.</p>
-                        
-                        <div class="collapsible-mobile" id="about-collapse">
-                            <p>I combine classical design methodologies (certified by CalArts) with modern UX design principles (certified by Google) and cutting-edge AI pipelines to generate assets that load faster, capture attention, and convert audiences.</p>
-                            
-                            <div class="strengths-list">
-                                <h4>Strengths</h4>
-                                <ul>
-                                    <li><i class="fa-solid fa-circle-check"></i> Creative visual thinker with strong attention to detail</li>
-                                    <li><i class="fa-solid fa-circle-check"></i> Dedicated to team success & fast learner</li>
-                                    <li><i class="fa-solid fa-circle-check"></i> Strong client communication & problem-solving</li>
-                                    <li><i class="fa-solid fa-circle-check"></i> Ability to manage multiple projects under tight deadlines</li>
-                                    <li><i class="fa-solid fa-circle-check"></i> Technical troubleshooting & hands-on IT support</li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <span class="read-more-toggle" data-target="about-collapse">Read More <i class="fa-solid fa-chevron-down"></i></span>
-                        
-                        <div style="margin-top: 24px;">
-                            <a href="https://drive.google.com/file/d/1SQtQami3ME0K_F_e2_E-Dc-hKf2mXSjF/view?usp=drive_link" target="_blank" class="btn btn-secondary btn-small-cv">View CV <i class="fa-solid fa-file-pdf"></i></a>
-                        </div>
-                    </div>
 
-                    <div class="about-meta-grid scroll-reveal stagger-2">
-                        <!-- Education Card -->
-                        <div class="card-glass edu-card">
-                            <h3 class="card-heading-icon"><i class="fa-solid fa-graduation-cap"></i> Education</h3>
-                            <div class="meta-item">
-                                <span class="meta-duration">05/2023</span>
-                                <h5>UX Design Specialization</h5>
-                                <p class="meta-location">Google Certificate</p>
+                <div class="about-unfold-wrap" id="about-unfold-wrap">
+                    <div class="about-grid about-unfold" id="about-unfold">
+                        <div class="about-info card-glass">
+                            <h3>Creative Visionary</h3>
+                            <p>I am a visual thinker who operates at the intersection of design, cinematography, and technology. Having spent over 7 years in the competitive UAE market, I've had the privilege of transforming brands across diverse sectors.</p>
+
+                            <div class="collapsible-mobile" id="about-collapse">
+                                <p>I combine classical design methodologies (certified by CalArts) with modern UX design principles (certified by Google) and cutting-edge AI pipelines to generate assets that load faster, capture attention, and convert audiences.</p>
+
+                                <div class="strengths-list">
+                                    <h4>Strengths</h4>
+                                    <ul>
+                                        <li><i class="fa-solid fa-circle-check"></i> Creative visual thinker with strong attention to detail</li>
+                                        <li><i class="fa-solid fa-circle-check"></i> Dedicated to team success & fast learner</li>
+                                        <li><i class="fa-solid fa-circle-check"></i> Strong client communication & problem-solving</li>
+                                        <li><i class="fa-solid fa-circle-check"></i> Ability to manage multiple projects under tight deadlines</li>
+                                        <li><i class="fa-solid fa-circle-check"></i> Technical troubleshooting & hands-on IT support</li>
+                                    </ul>
+                                </div>
                             </div>
-                            
-                            <div class="collapsible-mobile" id="edu-collapse">
+
+                            <span class="read-more-toggle" data-target="about-collapse">Read More <i class="fa-solid fa-chevron-down"></i></span>
+
+                            <div style="margin-top: 24px;">
+                                <a href="https://drive.google.com/file/d/1SQtQami3ME0K_F_e2_E-Dc-hKf2mXSjF/view?usp=drive_link" target="_blank" class="btn btn-secondary btn-small-cv">View CV <i class="fa-solid fa-file-pdf"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="about-meta-grid">
+                            <!-- Education Card -->
+                            <div class="card-glass edu-card">
+                                <h3 class="card-heading-icon"><i class="fa-solid fa-graduation-cap"></i> Education</h3>
                                 <div class="meta-item">
                                     <span class="meta-duration">05/2023</span>
-                                    <h5>Graphic Design Specialization</h5>
-                                    <p class="meta-location">California Institute of the Arts</p>
+                                    <h5>UX Design Specialization</h5>
+                                    <p class="meta-location">Google Certificate</p>
                                 </div>
-                                <div class="meta-item">
-                                    <span class="meta-duration">2015 - 2017</span>
-                                    <h5>Plus Two Commerce</h5>
-                                    <p class="meta-location">Mahatma College, Kumbla</p>
-                                </div>
-                            </div>
-                            
-                            <span class="read-more-toggle" data-target="edu-collapse">Read More <i class="fa-solid fa-chevron-down"></i></span>
-                        </div>
 
-                        <!-- Languages Card -->
-                        <div class="card-glass lang-card">
-                            <h3 class="card-heading-icon"><i class="fa-solid fa-language"></i> Languages</h3>
-                            <div class="lang-grid">
-                                <div class="lang-item">
-                                    <div class="lang-info">
-                                        <span>English</span>
-                                        <span class="lang-level">Proficient</span>
+                                <div class="collapsible-mobile" id="edu-collapse">
+                                    <div class="meta-item">
+                                        <span class="meta-duration">05/2023</span>
+                                        <h5>Graphic Design Specialization</h5>
+                                        <p class="meta-location">California Institute of the Arts</p>
                                     </div>
-                                    <div class="lang-dots">
-                                        <span class="dot filled"></span>
-                                        <span class="dot filled"></span>
-                                        <span class="dot filled"></span>
-                                        <span class="dot filled"></span>
-                                        <span class="dot"></span>
+                                    <div class="meta-item">
+                                        <span class="meta-duration">2015 - 2017</span>
+                                        <h5>Plus Two Commerce</h5>
+                                        <p class="meta-location">Mahatma College, Kumbla</p>
                                     </div>
                                 </div>
-                                <div class="lang-item">
-                                    <div class="lang-info">
-                                        <span>Hindi</span>
-                                        <span class="lang-level">Proficient</span>
-                                    </div>
-                                    <div class="lang-dots">
-                                        <span class="dot filled"></span>
-                                        <span class="dot filled"></span>
-                                        <span class="dot filled"></span>
-                                        <span class="dot filled"></span>
-                                        <span class="dot"></span>
-                                    </div>
-                                </div>
-                                
-                                <div class="collapsible-mobile" id="lang-collapse" style="width: 100%;">
+
+                                <span class="read-more-toggle" data-target="edu-collapse">Read More <i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+
+                            <!-- Languages Card -->
+                            <div class="card-glass lang-card">
+                                <h3 class="card-heading-icon"><i class="fa-solid fa-language"></i> Languages</h3>
+                                <div class="lang-grid">
                                     <div class="lang-item">
                                         <div class="lang-info">
-                                            <span>Malayalam</span>
+                                            <span>English</span>
                                             <span class="lang-level">Proficient</span>
                                         </div>
                                         <div class="lang-dots">
@@ -253,7 +237,7 @@
                                     </div>
                                     <div class="lang-item">
                                         <div class="lang-info">
-                                            <span>Tamil</span>
+                                            <span>Hindi</span>
                                             <span class="lang-level">Proficient</span>
                                         </div>
                                         <div class="lang-dots">
@@ -264,102 +248,41 @@
                                             <span class="dot"></span>
                                         </div>
                                     </div>
+
+                                    <div class="collapsible-mobile" id="lang-collapse" style="width: 100%;">
+                                        <div class="lang-item">
+                                            <div class="lang-info">
+                                                <span>Malayalam</span>
+                                                <span class="lang-level">Proficient</span>
+                                            </div>
+                                            <div class="lang-dots">
+                                                <span class="dot filled"></span>
+                                                <span class="dot filled"></span>
+                                                <span class="dot filled"></span>
+                                                <span class="dot filled"></span>
+                                                <span class="dot"></span>
+                                            </div>
+                                        </div>
+                                        <div class="lang-item">
+                                            <div class="lang-info">
+                                                <span>Tamil</span>
+                                                <span class="lang-level">Proficient</span>
+                                            </div>
+                                            <div class="lang-dots">
+                                                <span class="dot filled"></span>
+                                                <span class="dot filled"></span>
+                                                <span class="dot filled"></span>
+                                                <span class="dot filled"></span>
+                                                <span class="dot"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <span class="read-more-toggle" data-target="lang-collapse">Read More <i class="fa-solid fa-chevron-down"></i></span>
                                 </div>
-                                
-                                <span class="read-more-toggle" data-target="lang-collapse">Read More <i class="fa-solid fa-chevron-down"></i></span>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Key Services Section -->
-        <section id="services" class="services-section scroll-reveal">
-            <div class="container">
-                <div class="section-title scroll-reveal">
-                    <span class="sub-title">Expertise</span>
-                    <h2>Key Services & Focus Areas</h2>
-                    <div class="title-bar"></div>
-                </div>
-                
-                <div class="services-grid">
-                    <!-- Service 1: Video Editing -->
-                    <div class="card-glass service-card">
-                        <div class="service-icon"><i class="fa-solid fa-film"></i></div>
-                        <h3>Video Editing</h3>
-                        <p>Premium video post-production, dynamic pacing, and visual storytelling optimized for engagement.</p>
-                    </div>
-                    
-                    <!-- Service 2: Photography & Cinematography -->
-                    <div class="card-glass service-card">
-                        <div class="service-icon"><i class="fa-solid fa-camera"></i></div>
-                        <h3>Photography & Cinematography</h3>
-                        <p>Cinematic camera composition, professional lighting, and visual content production.</p>
-                    </div>
-
-                    <!-- Service 3: Graphic Design -->
-                    <div class="card-glass service-card">
-                        <div class="service-icon"><i class="fa-solid fa-palette"></i></div>
-                        <h3>Graphic Design</h3>
-                        <p>Visual digital assets, marketing layouts, presentations, and brand-focused collateral.</p>
-                    </div>
-
-                    <!-- Service 4: UI/UX Design -->
-                    <div class="card-glass service-card">
-                        <div class="service-icon"><i class="fa-solid fa-window-restore"></i></div>
-                        <h3>UI/UX Design</h3>
-                        <p>Interactive wireframes, user-centric prototypes, layouts, and clean interfaces.</p>
-                    </div>
-
-                    <!-- Service 5: Branding & Identity -->
-                    <div class="card-glass service-card">
-                        <div class="service-icon"><i class="fa-solid fa-bezier-curve"></i></div>
-                        <h3>Branding & Identity</h3>
-                        <p>Custom logos, color systems, typography guides, and cohesive branding assets.</p>
-                    </div>
-
-                    <!-- Service 6: Sound Design & SFX -->
-                    <div class="card-glass service-card">
-                        <div class="service-icon"><i class="fa-solid fa-volume-high"></i></div>
-                        <h3>Sound & SFX Design</h3>
-                        <p>Cinematic soundscapes, custom sound effects, mixing, and voiceover restoration.</p>
-                    </div>
-
-                    <!-- Service 7: AI Specialist -->
-                    <div class="card-glass service-card">
-                        <div class="service-icon"><i class="fa-solid fa-brain"></i></div>
-                        <h3>AI Specialist</h3>
-                        <p>Midjourney art generation, custom prompt optimization, and AI asset creation.</p>
-                    </div>
-
-                    <!-- Service 8: Color Grading -->
-                    <div class="card-glass service-card">
-                        <div class="service-icon"><i class="fa-solid fa-sliders"></i></div>
-                        <h3>Color Grading</h3>
-                        <p>Professional color correction, look design, and matching for a cinematic look.</p>
-                    </div>
-
-                    <!-- Service 9: Content Creation -->
-                    <div class="card-glass service-card">
-                        <div class="service-icon"><i class="fa-solid fa-clapperboard"></i></div>
-                        <h3>Content Creation</h3>
-                        <p>Engaging content production, marketing visual assets, and high-quality storytelling.</p>
-                    </div>
-
-                    <!-- Service 10: Social Media Management -->
-                    <div class="card-glass service-card">
-                        <div class="service-icon"><i class="fa-solid fa-share-nodes"></i></div>
-                        <h3>Social Media Management</h3>
-                        <p>Strategic growth plans, content scheduling, and comprehensive channel management.</p>
-                    </div>
-                </div>
-
-                <!-- Read More Button for Mobile View -->
-                <div class="services-more-btn-wrap">
-                    <button id="show-more-services-btn" class="btn btn-secondary">
-                        Read More <i class="fa-solid fa-chevron-down"></i>
-                    </button>
                 </div>
             </div>
         </section>
@@ -485,6 +408,295 @@
             </div>
         </section>
 
+        <!-- Key Services Section -->
+        <section id="services" class="services-section scroll-reveal">
+            <div class="container">
+                <div class="section-title scroll-reveal">
+                    <span class="sub-title">Expertise</span>
+                    <h2>Key Services & Focus Areas</h2>
+                    <div class="title-bar"></div>
+                </div>
+                
+                <div class="services-grid">
+                    <!-- Service 1: Video Editing -->
+                    <div class="card-glass service-card">
+                        <div class="service-icon"><i class="fa-solid fa-film"></i></div>
+                        <h3>Video Editing</h3>
+                        <p>Premium video post-production, dynamic pacing, and visual storytelling optimized for engagement.</p>
+                    </div>
+                    
+                    <!-- Service 2: Photography & Cinematography -->
+                    <div class="card-glass service-card">
+                        <div class="service-icon"><i class="fa-solid fa-camera"></i></div>
+                        <h3>Photography & Cinematography</h3>
+                        <p>Cinematic camera composition, professional lighting, and visual content production.</p>
+                    </div>
+
+                    <!-- Service 3: Graphic Design -->
+                    <div class="card-glass service-card">
+                        <div class="service-icon"><i class="fa-solid fa-palette"></i></div>
+                        <h3>Graphic Design</h3>
+                        <p>Visual digital assets, marketing layouts, presentations, and brand-focused collateral.</p>
+                    </div>
+
+                    <!-- Service 4: UI/UX Design -->
+                    <div class="card-glass service-card">
+                        <div class="service-icon"><i class="fa-solid fa-window-restore"></i></div>
+                        <h3>UI/UX Design</h3>
+                        <p>Interactive wireframes, user-centric prototypes, layouts, and clean interfaces.</p>
+                    </div>
+
+                    <!-- Service 5: Branding & Identity -->
+                    <div class="card-glass service-card">
+                        <div class="service-icon"><i class="fa-solid fa-bezier-curve"></i></div>
+                        <h3>Branding & Identity</h3>
+                        <p>Custom logos, color systems, typography guides, and cohesive branding assets.</p>
+                    </div>
+
+                    <!-- Service 6: Sound Design & SFX -->
+                    <div class="card-glass service-card">
+                        <div class="service-icon"><i class="fa-solid fa-volume-high"></i></div>
+                        <h3>Sound & SFX Design</h3>
+                        <p>Cinematic soundscapes, custom sound effects, mixing, and voiceover restoration.</p>
+                    </div>
+
+                    <!-- Service 7: AI Specialist -->
+                    <div class="card-glass service-card">
+                        <div class="service-icon"><i class="fa-solid fa-brain"></i></div>
+                        <h3>AI Specialist</h3>
+                        <p>Midjourney art generation, custom prompt optimization, and AI asset creation.</p>
+                    </div>
+
+                    <!-- Service 8: Color Grading -->
+                    <div class="card-glass service-card">
+                        <div class="service-icon"><i class="fa-solid fa-sliders"></i></div>
+                        <h3>Color Grading</h3>
+                        <p>Professional color correction, look design, and matching for a cinematic look.</p>
+                    </div>
+
+                    <!-- Service 9: Content Creation -->
+                    <div class="card-glass service-card">
+                        <div class="service-icon"><i class="fa-solid fa-clapperboard"></i></div>
+                        <h3>Content Creation</h3>
+                        <p>Engaging content production, marketing visual assets, and high-quality storytelling.</p>
+                    </div>
+
+                    <!-- Service 10: Social Media Management -->
+                    <div class="card-glass service-card">
+                        <div class="service-icon"><i class="fa-solid fa-share-nodes"></i></div>
+                        <h3>Social Media Management</h3>
+                        <p>Strategic growth plans, content scheduling, and comprehensive channel management.</p>
+                    </div>
+                </div>
+
+                <!-- Read More Button for Mobile View -->
+                <div class="services-more-btn-wrap">
+                    <button id="show-more-services-btn" class="btn btn-secondary">
+                        Read More <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vertical Reels & Shorts Section (3D Coverflow Carousel) -->
+        <section id="reels" class="reels-section scroll-reveal">
+            <div class="container">
+                <div class="reels-header-centered">
+                    <div class="section-title">
+                        <span class="sub-title">Instagram &amp; Shorts</span>
+                        <h2>Featured Reels</h2>
+                        <p class="reels-subtitle">Real creative productions &amp; commercial reels. Drag left or right, or click any video to play.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reels-slider-container">
+                <div class="reels-carousel-stage" id="reels-stage">
+                    <button class="reel-nav-btn prev" id="reel-prev-btn" aria-label="Previous Reel">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+
+                    <div class="reels-track" id="reels-track">
+                        <!-- Reel 1 (Default): Diamond Solitaire Ring -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-2.mp4" data-poster="assets/reels/reel-2.jpg" data-drive-src="https://drive.google.com/file/d/1vM1VyYN_9dmk5VTunCESX9NN8C8WkcsX/preview" data-title="Diamond Solitaire Ring" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-2.jpg" data-src="assets/reels/reel-2.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Fine Jewelry</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Diamond Solitaire Ring</h3>
+                                    <p class="reel-desc">Macro cinema optics &amp; luster reflection</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 2: Emerald Jewelry -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-1.mp4" data-poster="assets/reels/reel-1.jpg" data-drive-src="https://drive.google.com/file/d/1v1ppBbEtmo2g-wSn0zH_3vsmf4Kc3uZq/preview" data-title="Emerald Heritage Pendant" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-1.jpg" data-src="assets/reels/reel-1.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Luxury Jewelry</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Emerald Heritage Pendant</h3>
+                                    <p class="reel-desc">High-end product showcase &amp; macro lighting</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 3: AURA Radiance Serum -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-3.mp4" data-poster="assets/reels/reel-3.jpg" data-drive-src="https://drive.google.com/file/d/1dj7LmJUTS8iAlsjTc-OegfZd96_4wjTu/preview" data-title="AURA Radiance Serum" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-3.jpg" data-src="assets/reels/reel-3.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Cosmetics Ad</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">AURA Radiance Serum</h3>
+                                    <p class="reel-desc">Dynamic commercial edit &amp; sound design</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 6: Rosso Levanto Marble -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-6.mp4" data-poster="assets/reels/reel-6.jpg" data-drive-src="https://drive.google.com/file/d/1QlARzjJujJjvPcFi5PZXza11V8KI5jF1/preview" data-title="Rosso Levanto Marble" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-6.jpg" data-src="assets/reels/reel-6.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Craft &amp; Design</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Rosso Levanto Marble</h3>
+                                    <p class="reel-desc">Natural texture &amp; monolithic surfaces</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 8: Wellness & Spa Commercial -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-8.mp4" data-poster="assets/reels/reel-8.jpg" data-drive-src="https://drive.google.com/file/d/1O4i0VtRicI5nWtK5wg6yxwx0nA2eCfnh/preview" data-title="Luxury Bath &amp; Spa" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-8.jpg" data-src="assets/reels/reel-8.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Commercial</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Luxury Bath &amp; Spa</h3>
+                                    <p class="reel-desc">Sensory ambiance &amp; premium aesthetic</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 9: Artisan Craftsmanship -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-9.mp4" data-poster="assets/reels/reel-9.jpg" data-drive-src="https://drive.google.com/file/d/1g-k1AXomx_O6bJYF9GQyZgKOzkb0QXW6/preview" data-title="Artisan Craftsmanship" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-9.jpg" data-src="assets/reels/reel-9.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Behind The Scenes</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Artisan Craftsmanship</h3>
+                                    <p class="reel-desc">Precision workshop detailing &amp; assembly</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 10: Concept to Creation -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-10.mp4" data-poster="assets/reels/reel-10.jpg" data-drive-src="https://drive.google.com/file/d/1A9yiV59ccEQQPPZCcK-JHFIntIuWhiYb/preview" data-title="Concept to Creation" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-10.jpg" data-src="assets/reels/reel-10.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Design Process</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Concept to Creation</h3>
+                                    <p class="reel-desc">Sculpting fluted marble from sketch to studio</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 11: Bespoke Stone Staircase -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-11.mp4" data-poster="assets/reels/reel-11.jpg" data-drive-src="https://drive.google.com/file/d/1UHKCuHfyT43iXN9gug4AE1UsJgt3Luo-/preview" data-title="Bespoke Stone Staircase" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-11.jpg" data-src="assets/reels/reel-11.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Architectural</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Bespoke Stone Staircase</h3>
+                                    <p class="reel-desc">Precision on-site stonework &amp; installation</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 12: Artisan Mosaic Stone -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-12.mp4" data-poster="assets/reels/reel-12.jpg" data-drive-src="https://drive.google.com/file/d/1jxXI9YtgCpIygPIPVKUE7v2077Fcl1Da/preview" data-title="Artisan Mosaic Stone" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-12.jpg" data-src="assets/reels/reel-12.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Craftsmanship</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Artisan Mosaic Stone</h3>
+                                    <p class="reel-desc">Macro texture &amp; bespoke marble tile patterns</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 13: Luxury Stone Gallery -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-13.mp4" data-poster="assets/reels/reel-13.jpg" data-drive-src="https://drive.google.com/file/d/1tCJ6igNeSFcJEbTUlP-lzoRYdBffXsYC/preview" data-title="Luxury Stone Gallery" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-13.jpg" data-src="assets/reels/reel-13.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Showroom Tour</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Luxury Stone Gallery</h3>
+                                    <p class="reel-desc">Curated natural marble slabs &amp; architectural space</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 14: Dubai Lifestyle Story -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-14.mp4" data-poster="assets/reels/reel-14.jpg" data-drive-src="https://drive.google.com/file/d/1KmKurANMbAK9vOjE4dDdPdAnS9QOmV8X/preview" data-title="Dubai Lifestyle Story" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-14.jpg" data-src="assets/reels/reel-14.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Commercial</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Dubai Lifestyle Story</h3>
+                                    <p class="reel-desc">Urban automotive reel &amp; dynamic pacing</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reel 15: Showroom Brand Reel -->
+                        <div class="reel-card" data-video-src="assets/reels/reel-15.mp4" data-poster="assets/reels/reel-15.jpg" data-drive-src="https://drive.google.com/file/d/1RUk_m3pT3x3MiPZIB5nEJ0S-wawLFwkp/preview" data-title="Showroom Brand Reel" data-vertical="true">
+                            <div class="reel-media">
+                                <video class="reel-video" muted loop playsinline preload="none" poster="assets/reels/reel-15.jpg" data-src="assets/reels/reel-15.mp4"></video>
+                                <div class="reel-overlay"></div>
+                                <div class="reel-play-btn"><i class="fa-solid fa-expand"></i></div>
+                                <span class="reel-badge">Brand Story</span>
+                                <div class="reel-content">
+                                    <h3 class="reel-title">Showroom Brand Reel</h3>
+                                    <p class="reel-desc">Guided walkthrough &amp; kinetic editorial titles</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="reel-nav-btn next" id="reel-next-btn" aria-label="Next Reel">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="reels-pagination" id="reels-pagination" aria-label="Reels Pagination"></div>
+            </div>
+        </section>
+
         <!-- Skills Section -->
         <section id="skills" class="skills-section">
             <div class="container">
@@ -515,7 +727,7 @@
                                 </svg>
                             </div>
                             <div class="skill-details">
-                                <h4>Adobe Photoshop</h4>
+                                <h4>Photoshop</h4>
                                 <span class="skill-tag">Design & Branding</span>
                             </div>
                         </div>
@@ -530,7 +742,7 @@
                                 </svg>
                             </div>
                             <div class="skill-details">
-                                <h4>Adobe Illustrator</h4>
+                                <h4>Illustrator</h4>
                                 <span class="skill-tag">Vector & Illustration</span>
                             </div>
                         </div>
@@ -545,7 +757,7 @@
                                 </svg>
                             </div>
                             <div class="skill-details">
-                                <h4>Adobe After Effects</h4>
+                                <h4>After Effects</h4>
                                 <span class="skill-tag">Motion Graphics & VFX</span>
                             </div>
                         </div>
@@ -560,7 +772,7 @@
                                 </svg>
                             </div>
                             <div class="skill-details">
-                                <h4>Adobe Premiere Pro</h4>
+                                <h4>Premiere Pro</h4>
                                 <span class="skill-tag">Video Editing & Audio</span>
                             </div>
                         </div>
@@ -582,7 +794,7 @@
                                 <img src="icons/davinci_resolve_macos_bigsur_icon_190261.webp" alt="DaVinci Resolve">
                             </div>
                             <div class="skill-details">
-                                <h4>DaVinci Resolve</h4>
+                                <h4>DaVinci</h4>
                                 <span class="skill-tag">Color Grading & FX</span>
                             </div>
                         </div>
@@ -593,7 +805,7 @@
                                 <img src="icons/final-cut-pro-create-video-2026-02-04.webp" alt="Final Cut Pro">
                             </div>
                             <div class="skill-details">
-                                <h4>Final Cut Pro</h4>
+                                <h4>Final Cut</h4>
                                 <span class="skill-tag">NLE Video Editing</span>
                             </div>
                         </div>
@@ -608,7 +820,7 @@
                                 </svg>
                             </div>
                             <div class="skill-details">
-                                <h4>Adobe Lightroom</h4>
+                                <h4>Lightroom</h4>
                                 <span class="skill-tag">Photo & Color grading</span>
                             </div>
                         </div>
@@ -619,7 +831,7 @@
                                 <img src="icons/afinity-studio-icon-sucks-v0-rvsmmdtuy41g1.webp" alt="Affinity Suite">
                             </div>
                             <div class="skill-details">
-                                <h4>Affinity Suite</h4>
+                                <h4>Affinity</h4>
                                 <span class="skill-tag">Vector & Layout Design</span>
                             </div>
                         </div>
@@ -663,7 +875,7 @@
                                 <img src="icons/filmora.png" alt="Wondershare Filmora">
                             </div>
                             <div class="skill-details">
-                                <h4>Wondershare Filmora</h4>
+                                <h4>Filmora</h4>
                                 <span class="skill-tag">Video Editing & Effects</span>
                             </div>
                         </div>
@@ -674,7 +886,7 @@
                                 <img src="icons/vn-logo-on-a-transparent-background-free-png.webp" alt="VN Video Editor">
                             </div>
                             <div class="skill-details">
-                                <h4>VN Video Editor</h4>
+                                <h4>VN Editor</h4>
                                 <span class="skill-tag">Mobile Vlog Editing</span>
                             </div>
                         </div>
@@ -754,7 +966,7 @@
                                 </svg>
                             </div>
                             <div class="skill-details">
-                                <h4>Google AI Studio</h4>
+                                <h4>AI Studio</h4>
                                 <span class="skill-tag">Prompting & API</span>
                             </div>
                         </div>
@@ -820,7 +1032,7 @@
                                 <img src="icons/runway-ai-icon.webp" alt="Runway Gen-3">
                             </div>
                             <div class="skill-details">
-                                <h4>Runway Gen-3</h4>
+                                <h4>Runway</h4>
                                 <span class="skill-tag">AI Video & Motion Tools</span>
                             </div>
                         </div>
@@ -877,7 +1089,7 @@
                                 <i class="fa-solid fa-fire-flame-curved"></i>
                             </div>
                             <div class="skill-details">
-                                <h4>Adobe Firefly</h4>
+                                <h4>Firefly</h4>
                                 <span class="skill-tag">Generative Image & Vectors</span>
                             </div>
                         </div>
@@ -936,7 +1148,7 @@
                                 <i class="fa-solid fa-wand-magic-sparkles"></i>
                             </div>
                             <div class="skill-details">
-                                <h4>Motion Graphics & VFX</h4>
+                                <h4>Motion & VFX</h4>
                                 <span class="skill-tag">Cinematic VFX & Animations</span>
                             </div>
                         </div>
@@ -1002,7 +1214,7 @@
                                 <i class="fa-solid fa-share-nodes"></i>
                             </div>
                             <div class="skill-details">
-                                <h4>Social Media Managing</h4>
+                                <h4>Social Media</h4>
                                 <span class="skill-tag">Growth Strategies & Campaigns</span>
                             </div>
                         </div>
@@ -1015,17 +1227,6 @@
                             <div class="skill-details">
                                 <h4>Color Grading</h4>
                                 <span class="skill-tag">DaVinci Resolve Color Science</span>
-                            </div>
-                        </div>
-
-                        <!-- Typography -->
-                        <div class="skill-compact-card card-glass">
-                            <div class="skill-icon FA-icon-wrap" style="background: rgba(0, 210, 255, 0.08); border: 1px solid rgba(0, 210, 255, 0.2); color: #00d2ff;">
-                                <i class="fa-solid fa-font"></i>
-                            </div>
-                            <div class="skill-details">
-                                <h4>Typography</h4>
-                                <span class="skill-tag">Type Selections & Hierarchies</span>
                             </div>
                         </div>
 
@@ -1048,17 +1249,6 @@
                             <div class="skill-details">
                                 <h4>IT Skills</h4>
                                 <span class="skill-tag">Infrastructure & Networks</span>
-                            </div>
-                        </div>
-
-                        <!-- Communication Skills -->
-                        <div class="skill-compact-card card-glass">
-                            <div class="skill-icon FA-icon-wrap" style="background: rgba(253, 58, 105, 0.08); border: 1px solid rgba(253, 58, 105, 0.2); color: #fd3a69;">
-                                <i class="fa-solid fa-comments"></i>
-                            </div>
-                            <div class="skill-details">
-                                <h4>Excellent Communication</h4>
-                                <span class="skill-tag">Team Operations & Clients</span>
                             </div>
                         </div>
                     </div>
@@ -1096,20 +1286,22 @@
                     </div>
                 </div>
 
-                <!-- Portfolio Tabs Navigation -->
-                <div class="portfolio-tabs fade-in">
-                    <div class="portfolio-slider-indicator"></div>
-                    <button class="portfolio-tab-btn active" data-filter="video">Video Projects</button>
-                    <button class="portfolio-tab-btn" data-filter="graphic">Graphic Design</button>
+                <!-- Portfolio Header & Navigation -->
+                <div class="portfolio-header-wrap">
+                    <div class="portfolio-tabs fade-in">
+                        <div class="portfolio-slider-indicator"></div>
+                        <button class="portfolio-tab-btn active" data-filter="video">Video Projects</button>
+                        <button class="portfolio-tab-btn" data-filter="graphic">Graphic Design</button>
+                    </div>
                 </div>
 
                 <div class="portfolio-horizontal-scroll-wrap" id="portfolio-sticky-wrap">
-                    <div class="portfolio-sticky-container">
+                    <div class="portfolio-sticky-container" id="portfolio-scroll-container">
                         <div class="portfolio-grid">
                             <!-- Project 1 (Video) -->
                             <div class="portfolio-item card-glass" data-category="video" data-video-id="1193027585">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://player.vimeo.com/video/1193027585?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+                                    <iframe data-src="https://player.vimeo.com/video/1193027585?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
                                 </div>
                             </div>
@@ -1117,7 +1309,7 @@
                             <!-- Project 2 (Video) -->
                             <div class="portfolio-item card-glass" data-category="video" data-video-id="1204894846">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://player.vimeo.com/video/1204894846?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+                                    <iframe data-src="https://player.vimeo.com/video/1204894846?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
                                 </div>
                             </div>
@@ -1125,7 +1317,7 @@
                             <!-- Project 3 (Video) -->
                             <div class="portfolio-item card-glass" data-category="video" data-video-id="1205986172">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://player.vimeo.com/video/1205986172?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+                                    <iframe data-src="https://player.vimeo.com/video/1205986172?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
                                 </div>
                             </div>
@@ -1133,7 +1325,7 @@
                             <!-- Project 4 (Video) -->
                             <div class="portfolio-item card-glass" data-category="video" data-video-id="1204901697">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://player.vimeo.com/video/1204901697?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+                                    <iframe data-src="https://player.vimeo.com/video/1204901697?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
                                 </div>
                             </div>
@@ -1141,39 +1333,16 @@
                             <!-- Project 5 (Video) -->
                             <div class="portfolio-item card-glass" data-category="video" data-video-id="1155939899">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://player.vimeo.com/video/1155939899?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+                                    <iframe data-src="https://player.vimeo.com/video/1155939899?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; picture-in-picture" class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
                                 </div>
                             </div>
 
-                            <!-- Google Drive Video 1 (Vertical) -->
-                            <div class="portfolio-item card-glass vertical-video" data-category="video" data-drive-src="https://drive.google.com/file/d/1v1ppBbEtmo2g-wSn0zH_3vsmf4Kc3uZq/preview" data-vertical="true">
-                                <div class="portfolio-thumb">
-                                    <img src="assets/vertical_thumb_1.png" alt="Necklace Jewelry Video Thumbnail" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                                    <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
-                                </div>
-                            </div>
-
-                            <!-- Google Drive Video 2 (Vertical) -->
-                            <div class="portfolio-item card-glass vertical-video" data-category="video" data-drive-src="https://drive.google.com/file/d/1vM1VyYN_9dmk5VTunCESX9NN8C8WkcsX/preview" data-vertical="true">
-                                <div class="portfolio-thumb">
-                                    <img src="assets/vertical_thumb_2.png" alt="Ring Jewelry Video Thumbnail" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                                    <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
-                                </div>
-                            </div>
-
-                            <!-- Google Drive Video 3 (Vertical) -->
-                            <div class="portfolio-item card-glass vertical-video" data-category="video" data-drive-src="https://drive.google.com/file/d/1v1ppBbEtmo2g-wSn0zH_3vsmf4Kc3uZq/preview" data-vertical="true">
-                                <div class="portfolio-thumb">
-                                    <img src="assets/vertical_thumb_3.png" alt="Cosmetics Video Thumbnail" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                                    <div class="portfolio-icon"><i class="fa-solid fa-circle-play"></i></div>
-                                </div>
-                            </div>
 
                             <!-- Behance Graphic Design Embed 1 -->
                             <div class="portfolio-item card-glass" data-category="graphic">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://www.behance.net/embed/project/242022323?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" lazyload></iframe>
+                                    <iframe data-src="https://www.behance.net/embed/project/242022323?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <a href="https://www.behance.net/gallery/242022323/project" target="_blank" class="portfolio-icon-link" style="position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center;">
                                         <div class="portfolio-icon"><i class="fa-brands fa-behance"></i></div>
                                     </a>
@@ -1183,7 +1352,7 @@
                             <!-- Behance Graphic Design Embed 2 -->
                             <div class="portfolio-item card-glass" data-category="graphic">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://www.behance.net/embed/project/204374759?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" lazyload></iframe>
+                                    <iframe data-src="https://www.behance.net/embed/project/204374759?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <a href="https://www.behance.net/gallery/204374759/project" target="_blank" class="portfolio-icon-link" style="position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center;">
                                         <div class="portfolio-icon"><i class="fa-brands fa-behance"></i></div>
                                     </a>
@@ -1193,7 +1362,7 @@
                             <!-- Behance Graphic Design Embed 3 -->
                             <div class="portfolio-item card-glass" data-category="graphic">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://www.behance.net/embed/project/204110489?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" lazyload></iframe>
+                                    <iframe data-src="https://www.behance.net/embed/project/204110489?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <a href="https://www.behance.net/gallery/204110489/project" target="_blank" class="portfolio-icon-link" style="position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center;">
                                         <div class="portfolio-icon"><i class="fa-brands fa-behance"></i></div>
                                     </a>
@@ -1203,7 +1372,7 @@
                             <!-- Behance Graphic Design Embed 4 -->
                             <div class="portfolio-item card-glass" data-category="graphic">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://www.behance.net/embed/project/184283721?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" lazyload></iframe>
+                                    <iframe data-src="https://www.behance.net/embed/project/184283721?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <a href="https://www.behance.net/gallery/184283721/project" target="_blank" class="portfolio-icon-link" style="position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center;">
                                         <div class="portfolio-icon"><i class="fa-brands fa-behance"></i></div>
                                     </a>
@@ -1213,7 +1382,7 @@
                             <!-- Behance Graphic Design Embed 5 -->
                             <div class="portfolio-item card-glass" data-category="graphic">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://www.behance.net/embed/project/241167651?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" lazyload></iframe>
+                                    <iframe data-src="https://www.behance.net/embed/project/241167651?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <a href="https://www.behance.net/gallery/241167651/project" target="_blank" class="portfolio-icon-link" style="position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center;">
                                         <div class="portfolio-icon"><i class="fa-brands fa-behance"></i></div>
                                     </a>
@@ -1223,7 +1392,7 @@
                             <!-- Behance Graphic Design Embed 6 -->
                             <div class="portfolio-item card-glass" data-category="graphic">
                                 <div class="portfolio-thumb">
-                                    <iframe src="https://www.behance.net/embed/project/204109621?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" lazyload></iframe>
+                                    <iframe data-src="https://www.behance.net/embed/project/204109621?ilo0=1" frameborder="0" allowfullscreen class="portfolio-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>
                                     <a href="https://www.behance.net/gallery/204109621/project" target="_blank" class="portfolio-icon-link" style="position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center;">
                                         <div class="portfolio-icon"><i class="fa-brands fa-behance"></i></div>
                                     </a>
@@ -1406,6 +1575,8 @@
                     </div>
                 </div>
             </div>
+        </section>
+
         <!-- Thank You Banner Section -->
         <section id="thank-you" class="thank-you-section">
             <div class="thank-you-container">
@@ -1429,17 +1600,26 @@
 
     <!-- Video Modal Popup -->
     <div id="video-modal" class="vmodal-overlay" aria-hidden="true">
+        <button class="vmodal-nav prev" id="vmodal-prev" aria-label="Previous Video"><i class="fa-solid fa-chevron-left"></i></button>
         <div class="vmodal-box">
+            <button type="button" class="vmodal-sound-btn" id="vmodal-sound-btn" aria-label="Mute video" title="Mute / Unmute"><i class="fa-solid fa-volume-high"></i></button>
             <button class="vmodal-close" id="vmodal-close" aria-label="Close video"><i class="fa-solid fa-xmark"></i></button>
             <div class="vmodal-player-wrap">
                 <iframe id="vmodal-iframe" src="" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="vmodal-iframe"></iframe>
+                <video id="vmodal-video" class="vmodal-video" controls playsinline></video>
             </div>
             <div class="vmodal-footer">
-                <a href="https://drive.google.com/drive/folders/1bSkKw0pH2c9cCmkfEcWo3TIlk2p1xebY?usp=sharing" target="_blank" class="btn btn-primary vmodal-drive-btn">
-                    <i class="fa-solid fa-folder-open"></i> Browse More Videos on Drive
-                </a>
+                <span class="vmodal-title-label" id="vmodal-title-label"></span>
+                <div class="vmodal-footer-actions">
+                    <button type="button" class="btn btn-secondary vmodal-step-btn" id="vmodal-prev-mobile" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                    <a href="https://drive.google.com/drive/folders/1bSkKw0pH2c9cCmkfEcWo3TIlk2p1xebY?usp=sharing" target="_blank" class="btn btn-primary vmodal-drive-btn">
+                        <i class="fa-solid fa-folder-open"></i> Drive Folder
+                    </a>
+                    <button type="button" class="btn btn-secondary vmodal-step-btn" id="vmodal-next-mobile" aria-label="Next">Next <i class="fa-solid fa-chevron-right"></i></button>
+                </div>
             </div>
         </div>
+        <button class="vmodal-nav next" id="vmodal-next" aria-label="Next Video"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
 
     <!-- Floating WhatsApp FAB -->
@@ -1448,6 +1628,6 @@
     </a>
 
     <!-- Custom JS -->
-    <script src="script.js"></script>
+    <script src="script.js?v=5.4"></script>
 </body>
 </html>
