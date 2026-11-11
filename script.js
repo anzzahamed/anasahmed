@@ -549,6 +549,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const startFrame = 20;
         const frameRatio = 3632 / 2514;
         const canUseBitmap = typeof createImageBitmap === 'function' && window.location.protocol !== 'file:';
+        const isCompactViewport = () => window.innerWidth <= 991 || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+        let compactMode = isCompactViewport();
+        let effectiveStride = compactMode ? 10 : 3;
 
         const framePaths = [];
         const images = new Array(totalFrames);
@@ -572,9 +575,49 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentTargetFrame = startFrame;
         let resizeEpoch = 0;
 
-        const keyframeStride = 3;
         function isKeyframe(idx) {
-            return idx === startFrame || idx === totalFrames - 1 || ((idx - startFrame) % keyframeStride === 0);
+            return idx === startFrame || idx === totalFrames - 1 || ((idx - startFrame) % effectiveStride === 0);
+        }
+
+        // Offscreen canvas fallback for mobile Safari / WebKit builds that ignore resizeWidth or reject options
+        let shrinkCanvas = null;
+        let shrinkCtx = null;
+        let bitmapResizeSupported = null;
+        function decodeFrameBlob(blob, targetW, targetH) {
+            const w = Math.max(1, Math.round(targetW || portraitW));
+            const h = Math.max(1, Math.round(targetH || portraitH));
+            const downscaleBitmap = (bmp) => {
+                if (!bmp) return null;
+                if (bmp.width <= Math.ceil(w * 1.45) && bmp.height <= Math.ceil(h * 1.45)) {
+                    return bmp;
+                }
+                if (!shrinkCanvas) {
+                    shrinkCanvas = document.createElement('canvas');
+                    shrinkCtx = shrinkCanvas.getContext('2d', { alpha: false });
+                }
+                shrinkCanvas.width = w;
+                shrinkCanvas.height = h;
+                shrinkCtx.drawImage(bmp, 0, 0, w, h);
+                bmp.close();
+                return createImageBitmap(shrinkCanvas);
+            };
+
+            if (bitmapResizeSupported === false) {
+                return createImageBitmap(blob).then(downscaleBitmap);
+            }
+            return createImageBitmap(blob, { resizeWidth: w, resizeHeight: h, resizeQuality: 'medium' })
+                .then((bmp) => {
+                    if (bmp.width > Math.ceil(w * 1.45) || bmp.height > Math.ceil(h * 1.45)) {
+                        bitmapResizeSupported = false;
+                        return downscaleBitmap(bmp);
+                    }
+                    bitmapResizeSupported = true;
+                    return bmp;
+                })
+                .catch(() => {
+                    bitmapResizeSupported = false;
+                    return createImageBitmap(blob).then(downscaleBitmap);
+                });
         }
 
         function paintVignetteOverlay(w, h) {
@@ -624,6 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function updatePortraitRect() {
             const vw = window.innerWidth;
             const vh = window.innerHeight;
+            if (vw <= 0 || vh <= 0) return;
             lastWidth = vw;
             lastHeight = vh;
 
@@ -655,8 +699,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function evictDistantBitmaps(centerIdx) {
+            const maxDelta = compactMode ? 35 : 36;
             for (let j = startFrame; j < totalFrames; j++) {
-                if (bitmaps[j] && !isKeyframe(j) && Math.abs(j - centerIdx) > 36) {
+                if (bitmaps[j] && (compactMode ? Math.abs(j - centerIdx) > maxDelta && !isKeyframe(j) : !isKeyframe(j) && Math.abs(j - centerIdx) > maxDelta)) {
                     bitmaps[j].close();
                     bitmaps[j] = null;
                 }
@@ -675,8 +720,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const epoch = resizeEpoch;
                 const w = portraitW;
                 const h = portraitH;
-                createImageBitmap(frameBlobs[idx], { resizeWidth: w, resizeHeight: h, resizeQuality: 'medium' })
+                decodeFrameBlob(frameBlobs[idx], w, h)
                     .then((bmp) => {
+                        if (!bmp) return;
                         if (epoch !== resizeEpoch) {
                             bmp.close();
                             return;
@@ -766,8 +812,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (idx === startFrame) {
                         const w = portraitW;
                         const h = portraitH;
-                        return createImageBitmap(blob, { resizeWidth: w, resizeHeight: h, resizeQuality: 'medium' })
+                        return decodeFrameBlob(blob, w, h)
                             .then(bmp => {
+                                if (!bmp) return;
                                 if (epoch !== resizeEpoch) {
                                     bmp.close();
                                     return;
@@ -775,11 +822,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 bitmaps[idx] = bmp;
                                 imagesLoaded = true;
                                 drawFrame(currentTargetFrame);
-                                heroCanvas.style.opacity = '0.8';
+                                heroCanvas.style.opacity = compactMode ? '0.65' : '0.8';
                                 heroCanvas.style.visibility = 'visible';
                             });
                     }
-                    if (isKeyframe(idx) || Math.abs(idx - currentTargetFrame) <= 10) {
+                    if (isKeyframe(idx) || (!compactMode && Math.abs(idx - currentTargetFrame) <= 10)) {
                         if (decodeQueue.length < 48) decodeQueue.push(idx);
                         pumpDecodeQueue();
                     }
@@ -787,18 +834,49 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(() => {});
         }
 
+        let desktopOrderStarted = !compactMode;
+        function enqueueOrder(onlyKeyframes) {
+            const order = [];
+            for (let i = startFrame + 1; i < totalFrames; i++) {
+                if (isKeyframe(i)) order.push(i);
+            }
+            if (!onlyKeyframes) {
+                for (let i = startFrame + 1; i < totalFrames; i++) {
+                    if (!isKeyframe(i)) order.push(i);
+                }
+            }
+            let cursor = 0;
+            const workerCount = onlyKeyframes ? 1 : 2;
+            function next() {
+                if (cursor >= order.length) return Promise.resolve();
+                if (window._isUserScrolling) {
+                    return new Promise(res => setTimeout(() => next().then(res), 160));
+                }
+                const idx = order[cursor++];
+                return fetchFrame(idx, false).then(next);
+            }
+            for (let w = 0; w < workerCount; w++) next();
+        }
+
         function preload() {
             if (!canUseBitmap) {
-                for (let i = startFrame; i < totalFrames; i++) images[i] = new Image();
+                const loadIndices = [];
+                for (let i = startFrame; i < totalFrames; i++) {
+                    if (!compactMode || isKeyframe(i)) loadIndices.push(i);
+                    images[i] = new Image();
+                }
                 const firstImg = images[startFrame];
                 firstImg.src = framePaths[startFrame];
                 firstImg.onload = () => {
                     imagesLoaded = true;
                     drawFrame(startFrame);
-                    heroCanvas.style.opacity = '0.8';
+                    heroCanvas.style.opacity = compactMode ? '0.65' : '0.8';
                     heroCanvas.style.visibility = 'visible';
                     setTimeout(() => {
-                        for (let i = startFrame + 1; i < totalFrames; i++) images[i].src = framePaths[i];
+                        for (let k = 1; k < loadIndices.length; k++) {
+                            const idx = loadIndices[k];
+                            images[idx].src = framePaths[idx];
+                        }
                     }, 350);
                 };
                 return;
@@ -806,37 +884,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 1. Fetch and display the exact initial frame immediately
             fetchFrame(startFrame, true).then(() => {
-                // 2. Prioritize keyframes first (fast scrollbar jumps never hit blank frames), then remaining frames
-                const order = [];
-                for (let i = startFrame + 1; i < totalFrames; i++) {
-                    if (isKeyframe(i)) order.push(i);
-                }
-                for (let i = startFrame + 1; i < totalFrames; i++) {
-                    if (!isKeyframe(i)) order.push(i);
-                }
-
-                let cursor = 0;
-                const workerCount = 2;
-                function startRemaining() {
-                    function next() {
-                        if (cursor >= order.length) return Promise.resolve();
-                        if (window._isUserScrolling) {
-                            return new Promise(res => setTimeout(() => next().then(res), 160));
-                        }
-                        const idx = order[cursor++];
-                        return fetchFrame(idx, false).then(next);
-                    }
-                    for (let w = 0; w < workerCount; w++) next();
-                }
-                setTimeout(startRemaining, 250);
+                // 2. Mobile/compact devices fetch only light sampled keyframes (~23 frames vs 219) to prevent mobile Safari/Chrome OOM crashes
+                setTimeout(() => enqueueOrder(compactMode), 250);
             });
         }
 
         function resizeCanvas() {
             const newWidth = window.innerWidth;
             const newHeight = window.innerHeight;
+            if (newWidth <= 0 || newHeight <= 0) return;
             const heightDiff = Math.abs(newHeight - lastHeight);
             if (newWidth === lastWidth && heightDiff < 120) return;
+
+            const prevCompact = compactMode;
+            compactMode = isCompactViewport();
+            effectiveStride = compactMode ? 10 : 3;
 
             resizeEpoch++;
             for (let j = 0; j < totalFrames; j++) {
@@ -849,6 +911,10 @@ document.addEventListener('DOMContentLoaded', () => {
             updatePortraitRect();
             if (imagesLoaded) {
                 lastDrawnFrame = -1;
+                if (prevCompact && !compactMode && !desktopOrderStarted && canUseBitmap) {
+                    desktopOrderStarted = true;
+                    setTimeout(() => enqueueOrder(false), 120);
+                }
                 scheduleDecodeWindow(currentTargetFrame);
                 drawAndFade(window.scrollY || 0);
             }
@@ -893,7 +959,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (scrollY > fadeStart) {
                 const fadeProgress = Math.min(1, (scrollY - fadeStart) / (fadeEnd - fadeStart));
-                const nextOpacity = (0.8 * (1 - fadeProgress)).toFixed(3);
+                const baseOpacity = compactMode ? 0.65 : 0.8;
+                const nextOpacity = (baseOpacity * (1 - fadeProgress)).toFixed(3);
                 if (nextOpacity !== lastCanvasOpacity) {
                     lastCanvasOpacity = nextOpacity;
                     heroCanvas.style.opacity = nextOpacity;
@@ -905,9 +972,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (heroAmbientLayer) heroAmbientLayer.style.visibility = 'visible';
                 }
             } else {
-                if (lastCanvasOpacity !== '0.8') {
-                    lastCanvasOpacity = '0.8';
-                    heroCanvas.style.opacity = '0.8';
+                const baseOpacityStr = compactMode ? '0.65' : '0.8';
+                if (lastCanvasOpacity !== baseOpacityStr) {
+                    lastCanvasOpacity = baseOpacityStr;
+                    heroCanvas.style.opacity = baseOpacityStr;
                 }
                 if (!lastCanvasVisible) {
                     lastCanvasVisible = true;
@@ -1100,6 +1168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof window._syncReelsAudio === 'function') window._syncReelsAudio();
         showPlaylistItem(startIndex);
     }
+    window._openReelModal = openReelModal;
 
     function closeVideoModal() {
         if (!vModal) return;
@@ -1444,10 +1513,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     noticePopup.classList.add('active');
 
-                    // Auto hide after 6.5 seconds
+                    // Auto hide after 4.5 seconds
                     const autoHideTimer = setTimeout(() => {
                         closeNotice();
-                    }, 6500);
+                    }, 4500);
 
                     function closeNotice() {
                         if (noticePopup.classList.contains('active')) {
@@ -1458,14 +1527,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
-                    // Close on X button click
-                    const closeBtn = noticePopup.querySelector('.mobile-notice-close');
-                    if (closeBtn) {
-                        closeBtn.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            closeNotice();
-                        });
-                    }
+                    // Close on X button or anywhere on overlay click/tap
+                    noticePopup.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        closeNotice();
+                    });
 
                     // Close when user taps anywhere else
                     function handleOutsideTap() {
@@ -1764,9 +1830,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             triggerSweepForCard(activeInt);
 
-            // Autoplay the 3 frontmost videos cleanly; during active page scrolling keep only center active playing
+            // Autoplay frontmost videos on desktop; on compact mobile play active center reel and preload +/-1 metadata only to avoid mobile decoder crashes
             let staggerIdx = 0;
             const scrollingNow = Boolean(window._isUserScrolling);
+            const mobileReelsMode = window.innerWidth <= 991;
+            const playRange = mobileReelsMode ? 0.45 : 1.25;
             videos.forEach((vid, i) => {
                 if (!vid) return;
                 let diff = i - modPos;
@@ -1776,7 +1844,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (absDiff <= 1.25) {
                     const isCenter = (i === activeInt);
-                    if (scrollingNow && !isCenter) {
+                    if (absDiff > playRange || (scrollingNow && !isCenter)) {
+                        if (mobileReelsMode) ensureVideoHydrated(i, false);
                         vid.muted = true;
                         if (!vid.paused) vid.pause();
                         return;
@@ -2007,6 +2076,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 touchMode = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
             }
             if (touchMode !== 'h') return;
+            if (Math.abs(dx) > 10) blockClick = true;
 
             const now = performance.now();
             const dt = Math.max(8, now - lastTime);
@@ -2027,6 +2097,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetPos -= (velocity * 160) / div;
                 startAnim();
                 scheduleSnap(220);
+                setTimeout(() => { blockClick = false; }, 90);
+            } else {
+                blockClick = false;
             }
             touchMode = null;
         }, { passive: true });
@@ -2065,8 +2138,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     goToShortest(idx);
                     return;
                 }
-                if (typeof openReelModal === 'function') {
-                    openReelModal(playlist, idx);
+                if (typeof window._openReelModal === 'function') {
+                    window._openReelModal(playlist, idx);
                 }
             });
         });

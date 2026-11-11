@@ -476,7 +476,7 @@ header.scrolled {
 
 .hero-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     position: relative;
     z-index: 3; /* Above the canvas and readability overlay */
     width: 100%;
@@ -484,6 +484,8 @@ header.scrolled {
 
 .hero-content {
     max-width: 960px; /* Widened Hero section content boundary */
+    min-width: 0;
+    width: 100%;
     text-align: left;
 }
 
@@ -1508,21 +1510,21 @@ header.scrolled {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    box-shadow: inset 0 0 0 2px #090910;
+    box-shadow: inset 0 0 0 3px #090910;
     pointer-events: none;
     z-index: 3;
 }
 
 .portfolio-iframe {
-    width: calc(100% + 10px);
-    height: calc(100% + 10px);
+    width: calc(100% + 14px);
+    height: calc(100% + 14px);
     position: absolute;
-    top: -5px;
-    left: -5px;
+    top: -7px;
+    left: -7px;
     border: none;
     z-index: 1;
     pointer-events: none;
-    transform: scale(1.04) translateZ(0); /* Crop out third-party embed hairline borders cleanly */
+    transform: scale(1.06) translateZ(0); /* Crop out third-party embed hairline borders cleanly */
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -2059,14 +2061,17 @@ footer {
     }
 
     .hero-title-main {
-        font-size: 4.6rem;
-        line-height: 1.0;
-        white-space: normal;
+        font-size: clamp(2.15rem, 11vw, 3.8rem) !important;
+        line-height: 0.96 !important;
+        white-space: normal !important;
+        width: auto !important;
+        max-width: 100% !important;
     }
 
     .hero-title-sub {
-        font-size: 0.85rem;
-        line-height: 1;
+        font-size: clamp(1.15rem, 5.2vw, 2rem) !important;
+        letter-spacing: 0.08em;
+        line-height: 1.05;
         width: 100% !important;
     }
 
@@ -2413,14 +2418,17 @@ footer {
     }
 
     .hero-actions {
-        flex-direction: row !important; /* 2x2 horizontal side-by-side buttons */
+        flex-direction: row !important; /* Horizontal side-by-side buttons */
+        flex-wrap: wrap !important;
         width: 100% !important;
+        max-width: 100% !important;
         gap: 10px !important;
     }
     
     .hero-actions .btn {
-        flex: 1 !important;
-        padding: 10px 8px !important;
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        padding: 10px 10px !important;
         font-size: 0.74rem !important;
         white-space: nowrap !important;
         display: flex !important;
@@ -2591,13 +2599,13 @@ footer {
     .portfolio-sticky-container {
         position: sticky !important;
         top: 90px !important;
-        height: min(250px, 50vw) !important;
+        height: min(290px, 68vw) !important;
         display: flex !important;
         align-items: center !important;
     }
 
     .portfolio-horizontal-scroll-wrap:not(.disable-horizontal-scroll) {
-        height: 125vh !important; /* Tight scroll distance */
+        height: 135vh !important; /* Tight scroll distance without clipping card edges */
     }
 
     /* Smaller compact font sizes for all mobile text elements */
@@ -2913,6 +2921,16 @@ footer {
     }
     .vmodal-overlay.has-playlist .vmodal-step-btn {
         display: inline-flex;
+    }
+    .vmodal-footer-actions {
+        gap: 8px;
+        flex-wrap: nowrap;
+        width: 100%;
+    }
+    .vmodal-footer-actions .btn {
+        padding: 7px 11px;
+        font-size: 0.74rem;
+        white-space: nowrap;
     }
 }
 
@@ -3267,6 +3285,8 @@ body.vmodal-open {
     padding: 20px;
     opacity: 0;
     visibility: hidden;
+    touch-action: manipulation;
+    cursor: pointer;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
@@ -3530,10 +3550,13 @@ body.vmodal-open {
     }
     
     .service-card h3 {
-        font-size: 0.68rem !important;
+        font-size: 0.57rem !important;
+        letter-spacing: -0.02em !important;
         margin-top: 2px !important;
         margin-bottom: 0 !important;
-        line-height: 1.25 !important;
+        line-height: 1.22 !important;
+        padding: 0 2px !important;
+        overflow-wrap: break-word !important;
     }
     
     /* No description text on mobile view */
@@ -3620,6 +3643,14 @@ body.vmodal-open {
     margin-bottom: 6px;
     color: var(--text-primary);
     line-height: 1.25;
+}
+
+@media (max-width: 768px) {
+    .service-card h3 {
+        font-size: 0.64rem !important;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
 }
 
 .service-card p {
@@ -4190,6 +4221,18 @@ body.vmodal-open {
     display: inline-flex;
     align-items: baseline;
     color: #f4f2ff;
+}
+
+@media (max-width: 992px) {
+    .stat-num {
+        font-size: 1.75rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-num {
+        font-size: 1.45rem !important;
+    }
 }
 
 .framer-odometer {
